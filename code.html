@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html class="dark" lang="vi"><head>
+<html class="dark scroll-smooth" lang="vi"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Lý Luận Giá Trị Thặng Dư - Tư Bản Luận UI</title>
@@ -106,6 +106,14 @@
         }
     </script>
 <style>
+        html {
+            scroll-padding-top: 5rem;
+        }
+
+        section[id] {
+            scroll-margin-top: 5rem;
+        }
+
         .glass-panel {
             background-color: rgba(51, 65, 85, 0.4);
             backdrop-filter: blur(12px);
@@ -144,50 +152,62 @@
             50% { border-color: #dc2626; }
         }
 
-        /* Timeline scroll */
+        /* Timeline vertical scroll-focus */
+        .timeline-container {
+            position: relative;
+            padding: 3rem 0;
+        }
+
         .timeline-line {
-            width: 4px;
-            background: rgba(218, 226, 253, 0.1);
             position: absolute;
             left: 50%;
+            width: 4px;
             transform: translateX(-50%);
-            height: 100%;
-            z-index: 0;
+            background: rgba(218, 226, 253, 0.12);
             border-radius: 2px;
+            z-index: 0;
         }
-        
-        .timeline-progress {
-            width: 100%;
-            background: #dc2626;
+
+        .timeline-line-fill {
             position: absolute;
             top: 0;
             left: 0;
-            height: 0%;
+            width: 100%;
+            height: 0;
+            background: #dc2626;
             border-radius: 2px;
-            transition: height 0.1s ease-out;
-            box-shadow: 0 0 10px rgba(220, 38, 38, 0.6);
+            box-shadow: 0 0 12px rgba(220, 38, 38, 0.65);
             z-index: 1;
         }
 
-        .scroll-fade-up {
-            opacity: 0;
-            transform: translateY(40px) scale(0.95);
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        .timeline-steps {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 5rem;
         }
 
-        .scroll-fade-up.visible {
-            opacity: 1;
-            transform: translateY(0) scale(1);
+        .timeline-step {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            transform-origin: center center;
+            will-change: transform;
         }
-        
+
         .timeline-node {
-            transition: all 0.4s ease;
+            position: relative;
+            transition: box-shadow 0.25s ease, border-color 0.25s ease;
         }
-        
-        .scroll-fade-up.active .timeline-node {
-            box-shadow: 0 0 30px rgba(220, 38, 38, 0.3);
-            border-color: rgba(220, 38, 38, 0.8) !important;
-            transform: scale(1.05);
+
+        .timeline-step.is-active {
+            z-index: 10;
+        }
+
+        .timeline-step.is-active .timeline-node {
+            border-color: rgba(220, 38, 38, 0.9) !important;
+            box-shadow: 0 0 52px rgba(220, 38, 38, 0.5);
         }
 
         /* Section Entrance Animations */
@@ -230,6 +250,14 @@
         .animate-fade-up.is-visible {
             opacity: 1;
             transform: translateY(0);
+        }
+
+        .mindmap-connectors path {
+            stroke: #ef4444;
+            stroke-width: 2.5;
+            stroke-dasharray: 10 6;
+            opacity: 0.9;
+            filter: drop-shadow(0 0 6px rgba(220, 38, 38, 0.55));
         }
 
         /* Material Symbols */
@@ -349,10 +377,17 @@
 <!-- TopNavBar -->
 <nav class="fixed top-0 left-0 w-full z-50 bg-surface-container/80 backdrop-blur-xl border-b border-on-surface-variant/10 shadow-sm">
 <div class="flex justify-between items-center w-full px-margin-desktop h-16 max-w-container-max mx-auto">
-<div class="font-display-lg text-headline-sm font-semibold text-primary dark:text-primary">
-            Tư Bản Luận UI
+<div class="font-display-lg text-headline-sm font-semibold text-primary dark:text-primary transition-all duration-300" id="nav-title">
+            Lý Luận Giá Trị Thặng Dư
         </div>
-<div class="hidden md:flex space-x-8"><a class="text-primary font-bold border-b-2 border-primary pb-1 hover:text-primary transition-colors duration-200" href="#mo-dau">Mở đầu</a><a class="text-on-surface-variant font-body-md hover:text-primary transition-colors duration-200" href="#nguon-goc">Nguồn gốc</a><a class="text-on-surface-variant font-body-md hover:text-primary transition-colors duration-200" href="#cau-truc">Cấu trúc</a><a class="text-on-surface-variant font-body-md hover:text-primary transition-colors duration-200" href="#phuong-phap">Phương pháp</a><a class="text-on-surface-variant font-body-md hover:text-primary transition-colors duration-200" href="#thuc-tien">Thực tiễn</a></div>
+<div class="hidden md:flex space-x-8">
+<a class="nav-link text-primary font-bold border-b-2 border-primary pb-1 hover:text-primary transition-colors duration-200" data-section="mo-dau" href="#mo-dau">Mở đầu</a>
+<a class="nav-link text-on-surface-variant font-body-md hover:text-primary transition-colors duration-200 border-b-2 border-transparent pb-1" data-section="nguon-goc" href="#nguon-goc">Nguồn gốc</a>
+<a class="nav-link text-on-surface-variant font-body-md hover:text-primary transition-colors duration-200 border-b-2 border-transparent pb-1" data-section="cau-truc" href="#cau-truc">Cấu trúc</a>
+<a class="nav-link text-on-surface-variant font-body-md hover:text-primary transition-colors duration-200 border-b-2 border-transparent pb-1" data-section="mo-phong" href="#mo-phong">Mô phỏng</a>
+<a class="nav-link text-on-surface-variant font-body-md hover:text-primary transition-colors duration-200 border-b-2 border-transparent pb-1" data-section="phuong-phap" href="#phuong-phap">Phương pháp</a>
+<a class="nav-link text-on-surface-variant font-body-md hover:text-primary transition-colors duration-200 border-b-2 border-transparent pb-1" data-section="thuc-tien" href="#thuc-tien">Thực tiễn</a>
+</div>
 </div>
 </nav>
 <!-- Main Content Canvas -->
@@ -384,14 +419,14 @@
 <p class="font-body-lg text-body-lg text-on-surface-variant max-w-3xl mx-auto text-center mb-16">
     Mâu thuẫn của công thức chung của tư bản: Tư bản vận động theo công thức T - H - T' (trong đó T' = T + t). Giá trị thặng dư (t) không thể sinh ra từ quá trình lưu thông (mua rẻ bán đắt chỉ là sự phân phối lại), cũng không thể sinh ra ở ngoài lưu thông. Bí mật nằm ở một loại hàng hóa đặc biệt: Hàng hóa sức lao động.
 </p>
-<div class="relative py-12" id="timeline-container">
+<div class="timeline-container" id="timeline-container">
 <div class="timeline-line">
-<div class="timeline-progress"></div>
+<div class="timeline-line-fill" id="timeline-line-fill"></div>
 </div>
-<div class="grid grid-cols-1 gap-12 relative z-10">
+<div class="timeline-steps">
 <!-- Step 1 -->
-<div class="flex items-center justify-center scroll-fade-up">
-<div class="timeline-node glass-panel w-64 p-6 rounded-lg text-center relative group hover:border-marx-yellow border border-transparent">
+<div class="timeline-step" data-step="0">
+<div class="timeline-node glass-panel w-64 p-6 rounded-lg text-center relative border border-transparent">
 <div class="absolute -top-4 -right-4 bg-surface-variant rounded-full p-2 border border-outline">
 <span class="material-symbols-outlined text-marx-yellow">payments</span>
 </div>
@@ -400,8 +435,8 @@
 </div>
 </div>
 <!-- Step 2 -->
-<div class="flex items-center justify-center scroll-fade-up">
-<div class="timeline-node glass-panel w-96 p-6 rounded-lg text-center border-l-4 border-l-marx-red">
+<div class="timeline-step" data-step="1">
+<div class="timeline-node glass-panel w-96 p-6 rounded-lg text-center border border-transparent">
 <h3 class="font-headline-sm text-headline-sm mb-2 text-white">H (Hàng Hóa: TLSX &amp; Sức Lao Động)</h3>
 <p class="font-caption text-caption text-on-surface-variant mb-4">Nhà tư bản dùng tiền mua Tư liệu sản xuất (c) và Sức lao động (v).</p>
 <div class="bg-surface-container p-3 rounded text-left">
@@ -411,8 +446,8 @@
 </div>
 </div>
 <!-- Step 3 -->
-<div class="flex items-center justify-center scroll-fade-up">
-<div class="timeline-node glass-panel w-80 p-6 rounded-lg text-center border border-marx-red glow-active">
+<div class="timeline-step" data-step="2">
+<div class="timeline-node glass-panel w-80 p-6 rounded-lg text-center relative border border-transparent">
 <div class="absolute -left-4 top-1/2 -translate-y-1/2 bg-marx-red rounded-full w-8 h-8 flex items-center justify-center shadow-[0_0_15px_rgba(220,38,38,0.8)]">
 <span class="material-symbols-outlined text-white text-sm">precision_manufacturing</span>
 </div>
@@ -421,15 +456,15 @@
 </div>
 </div>
 <!-- Step 4 -->
-<div class="flex items-center justify-center scroll-fade-up">
+<div class="timeline-step" data-step="3">
 <div class="timeline-node glass-panel w-96 p-6 rounded-lg text-center border border-transparent">
 <h3 class="font-headline-sm text-headline-sm mb-2 text-white">H'</h3>
 <p class="font-caption text-caption text-on-surface-variant">Hàng hóa mới, chứa đựng giá trị lớn hơn. Giá trị thặng dư (m) chính là bộ phận giá trị mới dôi ra ngoài giá trị sức lao động do công nhân làm thuê tạo ra và bị nhà tư bản chiếm không.</p>
 </div>
 </div>
 <!-- Step 5 -->
-<div class="flex items-center justify-center scroll-fade-up">
-<div class="timeline-node glass-panel w-64 p-6 rounded-lg text-center relative border-t-2 border-marx-yellow">
+<div class="timeline-step" data-step="4">
+<div class="timeline-node glass-panel w-64 p-6 rounded-lg text-center relative border border-transparent">
 <div class="absolute -bottom-4 -left-4 bg-surface-variant rounded-full p-2 border border-outline">
 <span class="material-symbols-outlined text-marx-yellow">account_balance</span>
 </div>
@@ -617,7 +652,7 @@
 <section class="py-xl relative animate-scale-in" id="so-do-tu-duy">
 <div class="max-w-container-max mx-auto px-margin-desktop md:px-margin-desktop px-margin-mobile">
 <h2 class="font-headline-md text-headline-md mb-12 text-center"><span class="text-marx-red">05.</span> Sơ đồ Tư duy</h2>
-<div class="relative w-full max-w-5xl mx-auto py-8"><div class="absolute inset-0 pointer-events-none hidden md:block"><svg fill="none" height="100%" viewbox="0 0 1000 600" width="100%"><path d="M500 300 L250 150 M500 300 L250 450 M500 300 L750 150 M500 300 L750 450" opacity="0.4" stroke="#dc2626" stroke-dasharray="4 4" stroke-width="1"></path></svg></div><div class="grid grid-cols-1 md:grid-cols-3 gap-12 items-center relative z-10"><div class="space-y-12"><div class="glass-panel p-5 rounded-xl border-l-4 border-marx-red hover:bg-surface-container transition-colors"><div class="flex items-center gap-3 mb-3"><span class="material-symbols-outlined text-marx-red">history_edu</span><h4 class="font-headline-sm text-white">Nguồn gốc</h4></div><ul class="space-y-2 text-sm text-on-surface-variant"><li class="flex items-center gap-2"><span class="w-1 h-1 bg-marx-red rounded-full"></span>Chu trình T - H - T'</li><li class="flex items-center gap-2"><span class="w-1 h-1 bg-marx-red rounded-full"></span>Hàng hóa Sức lao động</li><li class="flex items-center gap-2"><span class="w-1 h-1 bg-marx-red rounded-full"></span>Lao động trừu tượng</li></ul></div><div class="glass-panel p-5 rounded-xl border-l-4 border-marx-red hover:bg-surface-container transition-colors"><div class="flex items-center gap-3 mb-3"><span class="material-symbols-outlined text-marx-red">balance</span><h4 class="font-headline-sm text-white">Bản chất</h4></div><ul class="space-y-2 text-sm text-on-surface-variant"><li class="flex items-center gap-2"><span class="w-1 h-1 bg-marx-red rounded-full"></span>Quan hệ bóc lột</li><li class="flex items-center gap-2"><span class="w-1 h-1 bg-marx-red rounded-full"></span>Tỷ suất m' &amp; Khối lượng M</li></ul></div></div><div class="flex justify-center"><div class="relative group"><div class="absolute inset-0 bg-marx-red/20 rounded-full blur-3xl group-hover:bg-marx-red/30 transition-colors"></div><div class="relative w-64 h-64 rounded-full border-2 border-marx-red bg-surface-container-highest flex flex-col items-center justify-center text-center p-6 shadow-[0_0_50px_rgba(220,38,38,0.2)]"><span class="material-symbols-outlined text-marx-red text-5xl mb-2">monetization_on</span><h3 class="font-headline-md text-white leading-tight">Giá trị<br/>thặng dư</h3><span class="text-marx-red font-label-caps text-2xl mt-2">(m)</span></div></div></div><div class="space-y-12"><div class="glass-panel p-5 rounded-xl border-r-4 border-marx-yellow hover:bg-surface-container transition-colors text-right"><div class="flex items-center justify-end gap-3 mb-3"><h4 class="font-headline-sm text-white">Cấu trúc</h4><span class="material-symbols-outlined text-marx-yellow">account_tree</span></div><ul class="space-y-2 text-sm text-on-surface-variant"><li class="flex items-center justify-end gap-2">Tư bản bất biến (c)<span class="w-1 h-1 bg-marx-yellow rounded-full"></span></li><li class="flex items-center justify-end gap-2">Tư bản khả biến (v)<span class="w-1 h-1 bg-marx-yellow rounded-full"></span></li></ul></div><div class="glass-panel p-5 rounded-xl border-r-4 border-marx-yellow hover:bg-surface-container transition-colors text-right"><div class="flex items-center justify-end gap-3 mb-3"><h4 class="font-headline-sm text-white">Phương pháp</h4><span class="material-symbols-outlined text-marx-yellow">trending_up</span></div><ul class="space-y-2 text-sm text-on-surface-variant"><li class="flex items-center justify-end gap-2">Thặng dư Tuyệt đối<span class="w-1 h-1 bg-marx-yellow rounded-full"></span></li><li class="flex items-center justify-end gap-2">Thặng dư Tương đối<span class="w-1 h-1 bg-marx-yellow rounded-full"></span></li><li class="flex items-center justify-end gap-2">Thặng dư Siêu ngạch<span class="w-1 h-1 bg-marx-yellow rounded-full"></span></li></ul></div></div></div></div>
+<div class="relative w-full max-w-5xl mx-auto py-8"><div class="absolute inset-0 pointer-events-none hidden md:block mindmap-connectors"><svg fill="none" height="100%" viewBox="0 0 1000 600" width="100%"><path d="M500 300 L250 150 M500 300 L250 450 M500 300 L750 150 M500 300 L750 450"></path></svg></div><div class="grid grid-cols-1 md:grid-cols-3 gap-12 items-center relative z-10"><div class="space-y-12"><div class="glass-panel p-5 rounded-xl border-l-4 border-marx-red hover:bg-surface-container transition-colors"><div class="flex items-center gap-3 mb-3"><span class="material-symbols-outlined text-marx-red">history_edu</span><h4 class="font-headline-sm text-white">Nguồn gốc</h4></div><ul class="space-y-2 text-sm text-on-surface-variant"><li class="flex items-center gap-2"><span class="w-1 h-1 bg-marx-red rounded-full"></span>Chu trình T - H - T'</li><li class="flex items-center gap-2"><span class="w-1 h-1 bg-marx-red rounded-full"></span>Hàng hóa Sức lao động</li><li class="flex items-center gap-2"><span class="w-1 h-1 bg-marx-red rounded-full"></span>Lao động trừu tượng</li></ul></div><div class="glass-panel p-5 rounded-xl border-l-4 border-marx-red hover:bg-surface-container transition-colors"><div class="flex items-center gap-3 mb-3"><span class="material-symbols-outlined text-marx-red">balance</span><h4 class="font-headline-sm text-white">Bản chất</h4></div><ul class="space-y-2 text-sm text-on-surface-variant"><li class="flex items-center gap-2"><span class="w-1 h-1 bg-marx-red rounded-full"></span>Quan hệ bóc lột</li><li class="flex items-center gap-2"><span class="w-1 h-1 bg-marx-red rounded-full"></span>Tỷ suất m' &amp; Khối lượng M</li></ul></div></div><div class="flex justify-center"><div class="relative group"><div class="absolute inset-0 bg-marx-red/20 rounded-full blur-3xl group-hover:bg-marx-red/30 transition-colors"></div><div class="relative w-64 h-64 rounded-full border-2 border-marx-red bg-surface-container-highest flex flex-col items-center justify-center text-center p-6 shadow-[0_0_50px_rgba(220,38,38,0.2)]"><span class="material-symbols-outlined text-marx-red text-5xl mb-2">monetization_on</span><h3 class="font-headline-md text-white leading-tight">Giá trị<br/>thặng dư</h3><span class="text-marx-red font-label-caps text-2xl mt-2">(m)</span></div></div></div><div class="space-y-12"><div class="glass-panel p-5 rounded-xl border-r-4 border-marx-yellow hover:bg-surface-container transition-colors text-right"><div class="flex items-center justify-end gap-3 mb-3"><h4 class="font-headline-sm text-white">Cấu trúc</h4><span class="material-symbols-outlined text-marx-yellow">account_tree</span></div><ul class="space-y-2 text-sm text-on-surface-variant"><li class="flex items-center justify-end gap-2">Tư bản bất biến (c)<span class="w-1 h-1 bg-marx-yellow rounded-full"></span></li><li class="flex items-center justify-end gap-2">Tư bản khả biến (v)<span class="w-1 h-1 bg-marx-yellow rounded-full"></span></li></ul></div><div class="glass-panel p-5 rounded-xl border-r-4 border-marx-yellow hover:bg-surface-container transition-colors text-right"><div class="flex items-center justify-end gap-3 mb-3"><h4 class="font-headline-sm text-white">Phương pháp</h4><span class="material-symbols-outlined text-marx-yellow">trending_up</span></div><ul class="space-y-2 text-sm text-on-surface-variant"><li class="flex items-center justify-end gap-2">Thặng dư Tuyệt đối<span class="w-1 h-1 bg-marx-yellow rounded-full"></span></li><li class="flex items-center justify-end gap-2">Thặng dư Tương đối<span class="w-1 h-1 bg-marx-yellow rounded-full"></span></li><li class="flex items-center justify-end gap-2">Thặng dư Siêu ngạch<span class="w-1 h-1 bg-marx-yellow rounded-full"></span></li></ul></div></div></div></div>
 </div>
 </section>
 <!-- Section 6: Thực Tiễn & Kết Luận -->
@@ -738,26 +773,174 @@
         // Initial call
         updateSimulator();
 
-        // --- Scroll Animations ---
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.1
-        };
+        // --- Nav Scrollspy ---
+        const navSections = [
+            { id: 'mo-dau', title: 'Lý Luận Giá Trị Thặng Dư' },
+            { id: 'nguon-goc', title: 'Nguồn Gốc Giá Trị Thặng Dư' },
+            { id: 'cau-truc', title: 'Cấu Trúc Tư Bản' },
+            { id: 'mo-phong', title: 'Mô Phỏng Sản Xuất' },
+            { id: 'phuong-phap', title: 'Phương Pháp Sản Xuất' },
+            { id: 'thuc-tien', title: 'Ý Nghĩa Thực Tiễn' }
+        ];
+        const navTitle = document.getElementById('nav-title');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const navBar = document.querySelector('nav');
+        const getNavOffset = () => (navBar ? navBar.offsetHeight : 64) + 16;
 
-        const observer = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                } else {
-                    entry.target.classList.remove('visible');
+        function scrollToSection(sectionId, smooth = true) {
+            const target = document.getElementById(sectionId);
+            if (!target) return;
+
+            const top = target.getBoundingClientRect().top + window.scrollY - getNavOffset();
+            window.scrollTo({ top, behavior: smooth ? 'smooth' : 'auto' });
+            history.replaceState(null, '', `#${sectionId}`);
+
+            if (navSections.some(s => s.id === sectionId)) {
+                setActiveNav(sectionId);
+            }
+        }
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                scrollToSection(link.dataset.section);
+            });
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(link => {
+            if (link.classList.contains('nav-link')) return;
+            link.addEventListener('click', (e) => {
+                const sectionId = link.getAttribute('href').slice(1);
+                if (!sectionId || !document.getElementById(sectionId)) return;
+                e.preventDefault();
+                scrollToSection(sectionId);
+            });
+        });
+
+        function setActiveNav(sectionId) {
+            navLinks.forEach(link => {
+                const isActive = link.dataset.section === sectionId;
+                link.classList.toggle('text-primary', isActive);
+                link.classList.toggle('font-bold', isActive);
+                link.classList.toggle('border-primary', isActive);
+                link.classList.toggle('text-on-surface-variant', !isActive);
+                link.classList.toggle('font-body-md', !isActive);
+                link.classList.toggle('border-transparent', !isActive);
+            });
+            const section = navSections.find(s => s.id === sectionId);
+            if (section && navTitle) {
+                navTitle.textContent = section.title;
+            }
+        }
+
+        function updateActiveNav() {
+            const anchor = getNavOffset() + 20;
+            let currentId = navSections[0].id;
+
+            navSections.forEach(({ id }) => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                const marker = el.querySelector('h2') || el;
+                if (marker.getBoundingClientRect().top <= anchor) {
+                    currentId = id;
                 }
             });
-        }, observerOptions);
 
-        document.querySelectorAll('.scroll-fade-up').forEach(el => {
-            observer.observe(el);
+            setActiveNav(currentId);
+        }
+
+        const timelineContainer = document.getElementById('timeline-container');
+        const timelineSteps = document.querySelectorAll('.timeline-step');
+        const timelineLineFill = document.getElementById('timeline-line-fill');
+
+        function getViewportFocusY() {
+            return window.scrollY + getNavOffset() + (window.innerHeight - getNavOffset()) * 0.42;
+        }
+
+        function updateTimelineScroll() {
+            if (!timelineContainer || !timelineSteps.length) return;
+
+            const focusY = getViewportFocusY();
+            const timelineLine = timelineContainer.querySelector('.timeline-line');
+            const containerRect = timelineContainer.getBoundingClientRect();
+            const firstRect = timelineSteps[0].getBoundingClientRect();
+            const lastRect = timelineSteps[timelineSteps.length - 1].getBoundingClientRect();
+
+            const lineStart = firstRect.top + firstRect.height / 2 - containerRect.top;
+            const lineEnd = lastRect.top + lastRect.height / 2 - containerRect.top;
+            const lineHeight = Math.max(0, lineEnd - lineStart);
+
+            if (timelineLine) {
+                timelineLine.style.top = `${lineStart}px`;
+                timelineLine.style.height = `${lineHeight}px`;
+            }
+
+            let bestIndex = 0;
+            let bestProximity = -1;
+            const stepCenters = [];
+
+            timelineSteps.forEach((step, i) => {
+                const rect = step.getBoundingClientRect();
+                const centerY = rect.top + rect.height / 2 + window.scrollY;
+                stepCenters.push(centerY);
+
+                const distance = Math.abs(centerY - focusY);
+                const maxDistance = window.innerHeight * 0.5;
+                const proximity = Math.max(0, 1 - distance / maxDistance);
+                const scale = 0.84 + Math.pow(proximity, 0.85) * 0.36;
+
+                step.style.transform = `scale(${scale})`;
+                step.style.zIndex = proximity > 0.35 ? Math.round(proximity * 10) : 1;
+                step.classList.toggle('is-passed', centerY < focusY - 20);
+
+                if (proximity > bestProximity) {
+                    bestProximity = proximity;
+                    bestIndex = i;
+                }
+            });
+
+            timelineSteps.forEach((step, i) => {
+                step.classList.toggle('is-active', i === bestIndex && bestProximity > 0.2);
+            });
+
+            if (timelineLineFill && lineHeight > 0 && stepCenters.length > 1) {
+                const start = stepCenters[0];
+                const end = stepCenters[stepCenters.length - 1];
+                let fillRatio = 0;
+
+                if (focusY <= start) {
+                    fillRatio = 0;
+                } else if (focusY >= end) {
+                    fillRatio = 1;
+                } else {
+                    for (let i = 0; i < stepCenters.length - 1; i++) {
+                        if (focusY >= stepCenters[i] && focusY <= stepCenters[i + 1]) {
+                            const seg = (focusY - stepCenters[i]) / (stepCenters[i + 1] - stepCenters[i]);
+                            fillRatio = (i + seg) / (stepCenters.length - 1);
+                            break;
+                        }
+                    }
+                }
+
+                timelineLineFill.style.height = `${fillRatio * lineHeight}px`;
+            }
+        }
+
+        function onScroll() {
+            updateActiveNav();
+            updateTimelineScroll();
+        }
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll);
+        window.addEventListener('load', () => {
+            const hash = window.location.hash.slice(1);
+            if (hash && document.getElementById(hash)) {
+                scrollToSection(hash, false);
+            }
+            onScroll();
         });
+        onScroll();
 
         // --- Section Appear/Disappear Animations ---
         const sectionObserverOptions = {
@@ -786,39 +969,6 @@
         animatedSections.forEach(selector => {
             document.querySelectorAll(selector).forEach(el => {
                 sectionObserver.observe(el);
-            });
-        });
-
-        // --- Timeline Scroll Progress ---
-        const timelineContainer = document.getElementById('timeline-container');
-        const timelineProgress = document.querySelector('.timeline-progress');
-        const timelineNodes = document.querySelectorAll('.scroll-fade-up');
-
-        window.addEventListener('scroll', () => {
-            if(!timelineContainer || !timelineProgress) return;
-            const rect = timelineContainer.getBoundingClientRect();
-            const viewportHeight = window.innerHeight;
-            
-            // Calculate Progress Line
-            if (rect.top < viewportHeight / 2) {
-                const scrolled = (viewportHeight / 2) - rect.top;
-                const total = rect.height;
-                let progress = (scrolled / total) * 100;
-                progress = Math.max(0, Math.min(100, progress));
-                timelineProgress.style.height = `${progress}%`;
-            } else {
-                timelineProgress.style.height = '0%';
-            }
-
-            // Highlight Active Nodes
-            timelineNodes.forEach(node => {
-                const nodeRect = node.getBoundingClientRect();
-                // Highlight when element is near the middle of the screen
-                if (nodeRect.top < viewportHeight * 0.6 && nodeRect.bottom > viewportHeight * 0.4) {
-                    node.classList.add('active');
-                } else {
-                    node.classList.remove('active');
-                }
             });
         });
         
