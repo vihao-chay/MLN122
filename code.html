@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lý Luận Giá Trị Thặng Dư - Tư Bản Luận UI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&amp;family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&amp;family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#060e20",
+                        "surface": "#0b1326",
+                        "tertiary-container": "#657389",
+                        "on-error-container": "#ffdad6",
+                        "surface-bright": "#31394d",
+                        "surface-container-low": "#131b2e",
+                        "on-secondary-fixed-variant": "#574500",
+                        "outline-variant": "#5c403c",
+                        "surface-variant": "#2d3449",
+                        "on-surface": "#dae2fd",
+                        "on-surface-variant": "#e6bdb8",
+                        "primary-fixed-dim": "#ffb4ab",
+                        "on-tertiary-container": "#f7f8ff",
+                        "on-secondary-container": "#645000",
+                        "tertiary-fixed-dim": "#b9c7e0",
+                        "surface-dim": "#0b1326",
+                        "on-primary-container": "#fff6f5",
+                        "secondary-container": "#eec200",
+                        "primary-fixed": "#ffdad6",
+                        "on-primary-fixed-variant": "#93000b",
+                        "tertiary": "#b9c7e0",
+                        "surface-container": "#171f33",
+                        "secondary": "#ffe083",
+                        "on-tertiary-fixed": "#0d1c2f",
+                        "inverse-on-surface": "#283044",
+                        "surface-container-highest": "#2d3449",
+                        "on-primary": "#690005",
+                        "on-error": "#690005",
+                        "on-secondary-fixed": "#231b00",
+                        "on-tertiary-fixed-variant": "#3a485c",
+                        "background": "#0b1326",
+                        "inverse-primary": "#bf0715",
+                        "surface-tint": "#ffb4ab",
+                        "outline": "#ac8884",
+                        "primary": "#ffb4ab",
+                        "secondary-fixed": "#ffe083",
+                        "on-tertiary": "#233144",
+                        "on-secondary": "#3c2f00",
+                        "primary-container": "#dc2626",
+                        "secondary-fixed-dim": "#eec200",
+                        "on-background": "#dae2fd",
+                        "inverse-surface": "#dae2fd",
+                        "on-primary-fixed": "#410002",
+                        "tertiary-fixed": "#d5e3fd",
+                        "error": "#ffb4ab",
+                        "error-container": "#93000a",
+                        "surface-container-high": "#222a3d",
+                        "marx-red": "#dc2626",
+                        "marx-yellow": "#facc15"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-desktop": "64px",
+                        "margin-mobile": "16px",
+                        "xs": "4px",
+                        "container-max": "1200px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "unit": "4px",
+                        "xl": "40px",
+                        "md": "16px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["EB Garamond", "serif"],
+                        "body-md": ["Hanken Grotesk", "sans-serif"],
+                        "headline-sm": ["EB Garamond", "serif"],
+                        "caption": ["Hanken Grotesk", "sans-serif"],
+                        "display-lg-mobile": ["EB Garamond", "serif"],
+                        "label-caps": ["JetBrains Mono", "monospace"],
+                        "headline-md": ["EB Garamond", "serif"],
+                        "body-lg": ["Hanken Grotesk", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "fontWeight": "500" }],
+                        "caption": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "display-lg-mobile": ["36px", { "lineHeight": "42px", "fontWeight": "600" }],
+                        "label-caps": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1em", "fontWeight": "500" }],
+                        "headline-md": ["32px", { "lineHeight": "40px", "fontWeight": "500" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background-color: rgba(51, 65, 85, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(248, 250, 252, 0.1);
+            transition: all 0.3s ease;
+        }
+        .glass-nav {
+            background-color: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(248, 250, 252, 0.1);
+        }
+        .glow-active {
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.4);
+            border-color: #dc2626 !important;
+        }
+        
+        /* Typewriter effect */
+        .typewriter h1 {
+            overflow: hidden;
+            border-right: .15em solid #dc2626;
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: .05em;
+            animation: 
+                typing 3.5s steps(40, end),
+                blink-caret .75s step-end infinite;
+        }
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #dc2626; }
+        }
+
+        /* Timeline scroll */
+        .timeline-line {
+            width: 4px;
+            background: rgba(218, 226, 253, 0.1);
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 100%;
+            z-index: 0;
+            border-radius: 2px;
+        }
+        
+        .timeline-progress {
+            width: 100%;
+            background: #dc2626;
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 0%;
+            border-radius: 2px;
+            transition: height 0.1s ease-out;
+            box-shadow: 0 0 10px rgba(220, 38, 38, 0.6);
+            z-index: 1;
+        }
+
+        .scroll-fade-up {
+            opacity: 0;
+            transform: translateY(40px) scale(0.95);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .scroll-fade-up.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        
+        .timeline-node {
+            transition: all 0.4s ease;
+        }
+        
+        .scroll-fade-up.active .timeline-node {
+            box-shadow: 0 0 30px rgba(220, 38, 38, 0.3);
+            border-color: rgba(220, 38, 38, 0.8) !important;
+            transform: scale(1.05);
+        }
+
+        /* Section Entrance Animations */
+        .animate-fade-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .animate-fade-left.is-visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .animate-scale-in {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .animate-scale-in.is-visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .animate-rotate-in {
+            opacity: 0;
+            transform: rotateX(-15deg) translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            transform-origin: center top;
+        }
+        .animate-rotate-in.is-visible {
+            opacity: 1;
+            transform: rotateX(0) translateY(0);
+        }
+        
+        .animate-fade-up {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .animate-fade-up.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Material Symbols */
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #dc2626; }
+        
+        .sim-bar-transition {
+            transition: width 0.3s ease-out;
+        }
+    </style>
+<!-- Include a simple WebGL component script -->
+<script>
+        class WebGLShaderElement extends HTMLElement {
+            constructor() {
+                super();
+                this.attachShadow({ mode: 'open' });
+                this.canvas = document.createElement('canvas');
+                this.shadowRoot.appendChild(this.canvas);
+                this.style.display = 'block';
+                this.canvas.style.width = '100%';
+                this.canvas.style.height = '100%';
+            }
+
+            connectedCallback() {
+                this.initWebGL();
+            }
+
+            initWebGL() {
+                const gl = this.canvas.getContext('webgl') || this.canvas.getContext('experimental-webgl');
+                if (!gl) return;
+
+                const src = this.getAttribute('src');
+                if (!src) return;
+
+                const vertexShaderSource = `
+                    attribute vec2 position;
+                    varying vec2 v_texCoord;
+                    void main() {
+                        gl_Position = vec4(position, 0.0, 1.0);
+                        v_texCoord = position * 0.5 + 0.5;
+                    }
+                `;
+
+                const fragmentShaderSource = src;
+
+                const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+                gl.shaderSource(vertexShader, vertexShaderSource);
+                gl.compileShader(vertexShader);
+
+                const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+                gl.shaderSource(fragmentShader, fragmentShaderSource);
+                gl.compileShader(fragmentShader);
+
+                const program = gl.createProgram();
+                gl.attachShader(program, vertexShader);
+                gl.attachShader(program, fragmentShader);
+                gl.linkProgram(program);
+                gl.useProgram(program);
+
+                const positionLocation = gl.getAttribLocation(program, "position");
+                const positionBuffer = gl.createBuffer();
+                gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+                    -1.0, -1.0,
+                     1.0, -1.0,
+                    -1.0,  1.0,
+                    -1.0,  1.0,
+                     1.0, -1.0,
+                     1.0,  1.0
+                ]), gl.STATIC_DRAW);
+
+                gl.enableVertexAttribArray(positionLocation);
+                gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+                const timeLocation = gl.getUniformLocation(program, "u_time");
+                const resolutionLocation = gl.getUniformLocation(program, "u_resolution");
+
+                const render = (time) => {
+                    if (this.canvas.width !== this.clientWidth || this.canvas.height !== this.clientHeight) {
+                        this.canvas.width = this.clientWidth;
+                        this.canvas.height = this.clientHeight;
+                        gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+                    }
+
+                    gl.uniform1f(timeLocation, time * 0.001);
+                    gl.uniform2f(resolutionLocation, this.canvas.width, this.canvas.height);
+
+                    gl.drawArrays(gl.TRIANGLES, 0, 6);
+                    requestAnimationFrame(render);
+                };
+                requestAnimationFrame(render);
+            }
+        }
+        customElements.define('webgl-shader', WebGLShaderElement);
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased selection:bg-marx-red/30 selection:text-white"><div class="fixed bottom-8 right-8 z-50 flex flex-col items-end gap-4"><div class="hidden w-80 md:w-96 h-[500px] glass-panel rounded-2xl overflow-hidden flex flex-col shadow-2xl border border-marx-red/30 animate-fade-up" id="ai-chat-window"><div class="bg-surface-container-high p-4 border-b border-outline/20 flex justify-between items-center"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-marx-red">smart_toy</span><span class="font-label-caps text-sm">Marxist Assistant</span></div><button class="material-symbols-outlined text-outline hover:text-white" onclick="document.getElementById('ai-chat-window').classList.add('hidden')">close</button></div><div class="flex-1 overflow-y-auto p-4 space-y-4 bg-surface/40"><div class="bg-marx-red/10 border border-marx-red/20 p-3 rounded-xl rounded-tl-none text-sm">Chào bạn! Tôi là trợ lý ảo về học thuyết Mác. Bạn cần tìm hiểu thêm về Giá trị thặng dư không?</div></div><div class="p-4 bg-surface-container"><div class="relative"><input class="w-full bg-surface-dim border border-outline/30 rounded-full py-2 px-4 text-sm focus:border-marx-red outline-none" placeholder="Hỏi về quy luật kinh tế..." type="text"/><button class="absolute right-2 top-1/2 -translate-y-1/2 material-symbols-outlined text-marx-red">send</button></div></div></div><button class="w-16 h-16 bg-marx-red text-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform active:scale-95 group" onclick="document.getElementById('ai-chat-window').classList.toggle('hidden')"><span class="material-symbols-outlined text-3xl">chat</span><div class="absolute -top-2 -right-2 w-5 h-5 bg-marx-yellow rounded-full animate-pulse"></div></button></div>
+<!-- TopNavBar -->
+<nav class="fixed top-0 left-0 w-full z-50 bg-surface-container/80 backdrop-blur-xl border-b border-on-surface-variant/10 shadow-sm">
+<div class="flex justify-between items-center w-full px-margin-desktop h-16 max-w-container-max mx-auto">
+<div class="font-display-lg text-headline-sm font-semibold text-primary dark:text-primary">
+            Tư Bản Luận UI
+        </div>
+<div class="hidden md:flex space-x-8"><a class="text-primary font-bold border-b-2 border-primary pb-1 hover:text-primary transition-colors duration-200" href="#mo-dau">Mở đầu</a><a class="text-on-surface-variant font-body-md hover:text-primary transition-colors duration-200" href="#nguon-goc">Nguồn gốc</a><a class="text-on-surface-variant font-body-md hover:text-primary transition-colors duration-200" href="#cau-truc">Cấu trúc</a><a class="text-on-surface-variant font-body-md hover:text-primary transition-colors duration-200" href="#phuong-phap">Phương pháp</a><a class="text-on-surface-variant font-body-md hover:text-primary transition-colors duration-200" href="#thuc-tien">Thực tiễn</a></div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="pt-16 min-h-screen">
+<!-- Section 1: Hero -->
+<section class="relative w-full h-screen flex items-center justify-center overflow-hidden animate-fade-left" id="mo-dau">
+<div class="absolute inset-0 bg-gradient-to-b from-transparent via-background/80 to-background"></div>
+<div class="relative z-10 max-w-container-max mx-auto px-margin-desktop md:px-margin-desktop px-margin-mobile text-center">
+<div class="inline-block border border-marx-yellow text-marx-yellow font-label-caps text-label-caps px-3 py-1 rounded-full mb-6 bg-marx-yellow/10">
+                TƯ BẢN TẬP 1
+            </div>
+<div class="typewriter mb-6 inline-block">
+<h1 class="font-display-lg text-display-lg md:text-display-lg text-display-lg-mobile text-white">Lý Luận Giá Trị Thặng Dư</h1>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-4xl mx-auto mt-6">
+                Lý luận giá trị thặng dư là "hòn đá tảng" trong học thuyết kinh tế của C.Mác. Nó bóc trần bản chất bóc lột của phương thức sản xuất tư bản chủ nghĩa, giải thích nguồn gốc thực sự của sự giàu có trong xã hội tư bản. C.Mác bắt đầu bằng việc phát hiện ra tính hai mặt của lao động sản xuất hàng hóa (lao động cụ thể tạo ra giá trị sử dụng và lao động trừu tượng tạo ra giá trị). Phát kiến mang tính cách mạng này là cơ sở để phân tích quá trình sản xuất tư bản chủ nghĩa không chỉ là quá trình tạo ra giá trị sử dụng mà còn là quá trình làm tăng giá trị.
+            </p>
+<div class="mt-12 flex justify-center space-x-4">
+<a class="inline-block bg-marx-red text-white font-label-caps text-label-caps px-8 py-3 rounded-DEFAULT hover:bg-inverse-primary transition-colors shadow-[0_0_20px_rgba(220,38,38,0.4)]" href="#nguon-goc">
+                    Khám Phá Lý Thuyết
+                </a>
+</div>
+</div>
+</section>
+<!-- Section 2: Timeline -->
+<section class="py-xl relative animate-fade-up" id="nguon-goc">
+<div class="max-w-container-max mx-auto px-margin-desktop md:px-margin-desktop px-margin-mobile">
+<h2 class="font-headline-md text-headline-md text-center mb-6"><span class="text-marx-red">01.</span> Nguồn Gốc và Bản Chất Của Giá Trị Thặng Dư</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-3xl mx-auto text-center mb-16">
+    Mâu thuẫn của công thức chung của tư bản: Tư bản vận động theo công thức T - H - T' (trong đó T' = T + t). Giá trị thặng dư (t) không thể sinh ra từ quá trình lưu thông (mua rẻ bán đắt chỉ là sự phân phối lại), cũng không thể sinh ra ở ngoài lưu thông. Bí mật nằm ở một loại hàng hóa đặc biệt: Hàng hóa sức lao động.
+</p>
+<div class="relative py-12" id="timeline-container">
+<div class="timeline-line">
+<div class="timeline-progress"></div>
+</div>
+<div class="grid grid-cols-1 gap-12 relative z-10">
+<!-- Step 1 -->
+<div class="flex items-center justify-center scroll-fade-up">
+<div class="timeline-node glass-panel w-64 p-6 rounded-lg text-center relative group hover:border-marx-yellow border border-transparent">
+<div class="absolute -top-4 -right-4 bg-surface-variant rounded-full p-2 border border-outline">
+<span class="material-symbols-outlined text-marx-yellow">payments</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm mb-2 text-white">T (Tiền)</h3>
+<p class="font-caption text-caption text-on-surface-variant">Tư bản ban đầu được ứng ra.</p>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="flex items-center justify-center scroll-fade-up">
+<div class="timeline-node glass-panel w-96 p-6 rounded-lg text-center border-l-4 border-l-marx-red">
+<h3 class="font-headline-sm text-headline-sm mb-2 text-white">H (Hàng Hóa: TLSX &amp; Sức Lao Động)</h3>
+<p class="font-caption text-caption text-on-surface-variant mb-4">Nhà tư bản dùng tiền mua Tư liệu sản xuất (c) và Sức lao động (v).</p>
+<div class="bg-surface-container p-3 rounded text-left">
+<p class="font-label-caps text-label-caps text-marx-yellow text-xs">Hàng hóa sức lao động:</p>
+<p class="font-caption text-caption mt-1">Sức lao động có giá trị (chi phí tái sản xuất ra nó) và giá trị sử dụng. Đặc điểm cốt lõi và duy nhất của hàng hóa sức lao động là trong quá trình tiêu dùng (lao động), nó có khả năng tạo ra một lượng giá trị mới lớn hơn giá trị của chính nó.</p>
+</div>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="flex items-center justify-center scroll-fade-up">
+<div class="timeline-node glass-panel w-80 p-6 rounded-lg text-center border border-marx-red glow-active">
+<div class="absolute -left-4 top-1/2 -translate-y-1/2 bg-marx-red rounded-full w-8 h-8 flex items-center justify-center shadow-[0_0_15px_rgba(220,38,38,0.8)]">
+<span class="material-symbols-outlined text-white text-sm">precision_manufacturing</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm mb-2 text-white">... SX ...</h3>
+<p class="font-caption text-caption text-on-surface-variant">Quá trình sản xuất tư bản chủ nghĩa là sự thống nhất giữa quá trình tạo ra giá trị sử dụng và quá trình làm tăng giá trị. Công nhân tạo ra giá trị mới bao gồm giá trị sức lao động (v) và giá trị thặng dư (m).</p>
+</div>
+</div>
+<!-- Step 4 -->
+<div class="flex items-center justify-center scroll-fade-up">
+<div class="timeline-node glass-panel w-96 p-6 rounded-lg text-center border border-transparent">
+<h3 class="font-headline-sm text-headline-sm mb-2 text-white">H'</h3>
+<p class="font-caption text-caption text-on-surface-variant">Hàng hóa mới, chứa đựng giá trị lớn hơn. Giá trị thặng dư (m) chính là bộ phận giá trị mới dôi ra ngoài giá trị sức lao động do công nhân làm thuê tạo ra và bị nhà tư bản chiếm không.</p>
+</div>
+</div>
+<!-- Step 5 -->
+<div class="flex items-center justify-center scroll-fade-up">
+<div class="timeline-node glass-panel w-64 p-6 rounded-lg text-center relative border-t-2 border-marx-yellow">
+<div class="absolute -bottom-4 -left-4 bg-surface-variant rounded-full p-2 border border-outline">
+<span class="material-symbols-outlined text-marx-yellow">account_balance</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm mb-2 text-white">T' = T + m</h3>
+<p class="font-caption text-caption text-on-surface-variant">Nhà tư bản bán hàng hóa để thu về tiền. Tiền thu về lớn hơn tư bản ứng ra.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3: Cấu Trúc Tư Bản -->
+<section class="py-xl bg-surface-container-low/30 animate-scale-in" id="cau-truc">
+<div class="max-w-container-max mx-auto px-margin-desktop md:px-margin-desktop px-margin-mobile">
+<h2 class="font-headline-md text-headline-md mb-12"><span class="text-marx-red">02.</span> Cấu Trúc Tư Bản &amp; Thước Đo Bóc Lột</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg relative mb-12">
+<!-- Decorative Mindmap connector -->
+<div class="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-0.5 bg-outline-variant"></div>
+<!-- Constant Capital Node -->
+<div class="glass-panel p-8 rounded-xl hover:scale-[1.02] transition-transform cursor-pointer group">
+<div class="flex justify-between items-start mb-6">
+<h3 class="font-headline-sm text-headline-sm group-hover:text-white transition-colors">Tư Bản Bất Biến (c)</h3>
+<span class="material-symbols-outlined text-outline text-3xl group-hover:text-marx-yellow transition-colors">factory</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">
+    Bộ phận tư bản tồn tại dưới hình thái tư liệu sản xuất (máy móc, nhà xưởng, nguyên nhiên vật liệu). Đặc điểm của nó là giá trị được bảo tồn và chuyển dịch nguyên vẹn vào sản phẩm mới thông qua lao động cụ thể của công nhân, không có sự biến đổi về lượng trong quá trình sản xuất.
+                    </p>
+<div class="border-t border-outline/30 pt-4 relative">
+<p class="font-label-caps text-label-caps text-outline group-hover:text-on-surface transition-colors">Điều kiện vật chất</p>
+<!-- Tooltip -->
+<div class="absolute opacity-0 group-hover:opacity-100 transition-opacity bg-surface p-2 rounded border border-outline-variant text-xs -bottom-10 left-0 w-full z-10 pointer-events-none">
+                            Chỉ đóng vai trò là điều kiện vật chất để tạo ra giá trị thặng dư.
+                        </div>
+</div>
+</div>
+<!-- Variable Capital Node -->
+<div class="glass-panel p-8 rounded-xl border-t-2 border-t-marx-red relative overflow-visible hover:scale-[1.02] transition-transform cursor-pointer group hover:shadow-[0_0_15px_rgba(220,38,38,0.15)]">
+<div class="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
+<span class="material-symbols-outlined" style="font-size: 120px;">group</span>
+</div>
+<div class="flex justify-between items-start mb-6 relative z-10">
+<h3 class="font-headline-sm text-headline-sm text-white">Tư Bản Khả Biến (v)</h3>
+<span class="material-symbols-outlined text-marx-red text-3xl">psychology</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4 relative z-10">
+    Bộ phận tư bản dùng để mua sức lao động (trả lương cho công nhân). Trong quá trình sản xuất, thông qua lao động trừu tượng, người công nhân không chỉ tái tạo lại giá trị sức lao động của mình (v) mà còn tạo ra một lượng giá trị mới dôi ra, tức là giá trị thặng dư (m). Tư bản khả biến có sự biến đổi về lượng.
+                    </p>
+<div class="border-t border-outline/30 pt-4 relative z-10">
+<p class="font-label-caps text-label-caps text-marx-red font-bold">Nguồn gốc của Giá Trị Thặng Dư</p>
+<!-- Tooltip -->
+<div class="absolute opacity-0 group-hover:opacity-100 transition-opacity bg-surface p-2 rounded border border-marx-red text-xs -bottom-10 left-0 w-full z-10 pointer-events-none">
+                            Giá trị sử dụng của hàng hóa sức lao động chính là nguồn gốc sinh ra giá trị.
+                        </div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg relative mb-12">
+<!-- Rate of Surplus Value -->
+<div class="glass-panel p-8 rounded-xl border border-outline/20">
+<h3 class="font-headline-sm text-headline-sm text-white mb-4">Tỷ suất giá trị thặng dư (m')</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">Là tỷ số tính theo phần trăm giữa giá trị thặng dư và tư bản khả biến.</p>
+<div class="bg-surface/50 p-4 rounded font-label-caps text-label-caps text-marx-yellow text-center text-lg mb-4">
+            m' = (m / v) * 100%
+        </div>
+<p class="font-caption text-caption text-on-surface-variant">Hoặc tính bằng thời gian: m' = (Thời gian lao động thặng dư / Thời gian lao động tất yếu) * 100%. Phản ánh trình độ bóc lột của tư bản đối với lao động.</p>
+</div>
+<!-- Mass of Surplus Value -->
+<div class="glass-panel p-8 rounded-xl border border-outline/20">
+<h3 class="font-headline-sm text-headline-sm text-white mb-4">Khối lượng giá trị thặng dư (M)</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">Là quy mô, lượng tuyệt đối của giá trị thặng dư mà nhà tư bản thu được.</p>
+<div class="bg-surface/50 p-4 rounded font-label-caps text-label-caps text-marx-red text-center text-lg mb-4">
+            M = m' * V
+        </div>
+<p class="font-caption text-caption text-on-surface-variant">(Trong đó V là tổng tư bản khả biến). Phản ánh quy mô bóc lột của tư bản.</p>
+</div>
+</div>
+<!-- Quote Block -->
+<div class="mt-12 pl-6 border-l-4 border-marx-red bg-surface/50 py-4 pr-4 max-w-3xl">
+<p class="font-display-lg text-headline-sm italic text-on-surface">
+                    "Tư bản là lao động chết, chỉ sống được như ma cà rồng nhờ hút lao động sống, và nó càng sống được nhiều chừng nào thì nó càng hút được nhiều lao động sống chừng ấy."
+                </p>
+<p class="font-label-caps text-label-caps text-marx-yellow mt-4 uppercase text-xs">Karl Marx, Tư Bản (Tập 1)</p>
+</div>
+</div>
+</section>
+<!-- Section 4: Simulator -->
+<section class="py-xl animate-rotate-in" id="mo-phong">
+<div class="max-w-container-max mx-auto px-margin-desktop md:px-margin-desktop px-margin-mobile">
+<h2 class="font-headline-md text-headline-md mb-4"><span class="text-marx-red">03.</span> Mô Phỏng Sản Xuất Giá Trị Thặng Dư</h2>
+<p class="text-on-surface-variant mb-8 max-w-2xl">Điều chỉnh các biến số để xem cấu tạo giá trị hàng hóa (W = c + v + m) và tỷ suất giá trị thặng dư (m') thay đổi như thế nào.</p>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Controls -->
+<div class="lg:col-span-4 glass-panel p-6 rounded-xl space-y-6">
+<div>
+<label class="flex justify-between font-label-caps text-label-caps text-on-surface mb-2">
+<span class="">Tư bản bất biến (c)</span>
+<span class="text-outline" id="val-c">4000</span>
+</label>
+<input class="w-full accent-surface-variant h-2 bg-surface-container rounded-lg appearance-none cursor-pointer" id="input-c" max="8000" min="1000" step="500" type="range" value="4000"/>
+<p class="text-[10px] text-tertiary mt-1">Chi phí máy móc, nguyên liệu</p>
+</div>
+<div>
+<label class="flex justify-between font-label-caps text-label-caps text-on-surface mb-2">
+<span class="">Tư bản khả biến (v)</span>
+<span class="text-white font-bold" id="val-v">1000</span>
+</label>
+<input class="w-full accent-marx-yellow h-2 bg-surface-container rounded-lg appearance-none cursor-pointer" id="input-v" max="3000" min="500" step="100" type="range" value="1000"/>
+<p class="text-[10px] text-tertiary mt-1">Chi phí tiền lương</p>
+</div>
+<div>
+<label class="flex justify-between font-label-caps text-label-caps text-on-surface mb-2">
+<span class="">Giá trị thặng dư (m)</span>
+<span class="text-marx-red font-bold" id="val-m">1000</span>
+</label>
+<input class="w-full accent-marx-red h-2 bg-surface-container rounded-lg appearance-none cursor-pointer" id="input-m" max="4000" min="500" step="100" type="range" value="1000"/>
+<p class="text-[10px] text-tertiary mt-1">Lao động thặng dư bị chiếm đoạt</p>
+</div>
+</div>
+<!-- Visualization & Results -->
+<div class="lg:col-span-8 glass-panel p-6 rounded-xl flex flex-col justify-center">
+<!-- Value Bar -->
+<div class="mb-8">
+<div class="flex justify-between text-xs font-label-caps mb-2">
+<span class="text-outline">W (Tổng Giá Trị) = <span class="text-white" id="total-w">6000</span></span>
+<span class="text-marx-red">m' (Tỷ suất) = <span class="" id="total-rate">100.0%</span></span>
+</div>
+<div class="h-12 w-full flex rounded overflow-hidden shadow-inner bg-surface">
+<div class="h-full bg-surface-bright flex items-center justify-center text-xs font-bold text-outline-variant sim-bar-transition" id="bar-c" style="width: 66.6667%;">c</div>
+<div class="h-full bg-marx-yellow flex items-center justify-center text-xs font-bold text-surface sim-bar-transition" id="bar-v" style="width: 16.6667%;">v</div>
+<div class="h-full bg-marx-red flex items-center justify-center text-xs font-bold text-white sim-bar-transition" id="bar-m" style="width: 16.6667%;">m</div>
+</div>
+<div class="flex mt-2 text-[10px] text-center">
+<div class="sim-bar-transition text-outline" id="label-c" style="width: 66.6667%;">Lao động quá khứ</div>
+<div class="sim-bar-transition text-marx-yellow" id="label-v" style="width: 16.6667%;">LĐ tất yếu</div>
+<div class="sim-bar-transition text-marx-red" id="label-m" style="width: 16.6667%;">LĐ thặng dư</div>
+</div>
+</div>
+<!-- Dynamic Insight -->
+<div class="bg-surface/60 p-4 rounded-lg border-l-4 border-marx-yellow">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-marx-yellow mt-1">insights</span>
+<div>
+<h4 class="font-headline-sm text-sm text-white mb-1">Phân Tích Động</h4>
+<p class="text-sm text-on-surface-variant" id="dynamic-insight">Với tỷ suất m' = 100.0%, cấu tạo hữu cơ tư bản (c/v) là 4.0:1. Người công nhân làm việc nửa thời gian để tạo ra giá trị bằng tiền lương (v), và nửa thời gian còn lại làm việc không công (m).</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 5: Methods (AI Chatbox) -->
+<section class="py-xl bg-surface-container-low/30 animate-fade-left" id="phuong-phap">
+<div class="max-w-container-max mx-auto px-margin-desktop md:px-margin-desktop px-margin-mobile">
+<h2 class="font-headline-md text-headline-md mb-8"><span class="text-marx-red">04.</span> Phương Pháp Sản Xuất Giá Trị Thặng Dư</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+<!-- Absolute -->
+<div class="glass-panel p-6 rounded-xl border-t-2 border-t-marx-red">
+<h3 class="font-headline-sm text-headline-sm text-white mb-3">1. Giá Trị Thặng Dư Tuyệt Đối</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Được tạo ra bằng cách kéo dài ngày lao động vượt quá thời gian lao động tất yếu, trong điều kiện năng suất lao động, giá trị sức lao động và thời gian lao động tất yếu không thay đổi. Ví dụ: Kéo dài ca làm việc từ 8 tiếng lên 10 tiếng.</p>
+</div>
+<!-- Relative -->
+<div class="glass-panel p-6 rounded-xl border-t-2 border-t-marx-yellow">
+<h3 class="font-headline-sm text-headline-sm text-white mb-3">2. Giá Trị Thặng Dư Tương Đối</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Được tạo ra do rút ngắn thời gian lao động tất yếu, bằng cách nâng cao năng suất lao động xã hội, nhờ đó kéo dài thời gian lao động thặng dư tương ứng, trong điều kiện độ dài ngày lao động không đổi.</p>
+</div>
+<!-- Extra -->
+<div class="glass-panel p-6 rounded-xl border-t-2 border-t-tertiary">
+<h3 class="font-headline-sm text-headline-sm text-white mb-3">3. Giá Trị Thặng Dư Siêu Ngạch</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Là phần giá trị thặng dư thu được do áp dụng công nghệ mới, làm cho giá trị cá biệt của hàng hóa thấp hơn giá trị thị trường. Đây là động lực trực tiếp mạnh mẽ nhất thúc đẩy các nhà tư bản cải tiến kỹ thuật.</p>
+</div>
+</div>
+<div class="bg-surface-container p-6 rounded-xl mb-12 border border-outline/20">
+<h3 class="font-headline-sm text-headline-sm text-white mb-4">Sự Che Đậy Trên Bề Mặt Thị Trường</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">Trong thực tiễn kinh tế, giá trị thặng dư mang nhiều hình thái biểu hiện khác nhau, che giấu bản chất bóc lột:</p>
+<ul class="list-disc pl-6 space-y-2 text-on-surface-variant">
+<li><strong>Lợi nhuận (p):</strong> Giá trị thặng dư được quan niệm là con đẻ của toàn bộ tư bản ứng ra (k = c + v). Làm mờ đi ranh giới giữa c và v, che giấu nguồn gốc thực sự từ v.</li>
+<li><strong>Lợi tức (z):</strong> Phần lợi nhuận bình quân mà tư bản đi vay phải trả cho tư bản cho vay. Tạo ra ảo tưởng tiền đẻ ra tiền (T - T').</li>
+<li><strong>Địa tô (R):</strong> Phần giá trị thặng dư siêu ngạch do tư bản kinh doanh nông nghiệp nộp cho địa chủ.</li>
+</ul>
+</div>
+</div>
+</section>
+<!-- Redesigned Section 5.5: Mindmap -->
+<section class="py-xl relative animate-scale-in" id="so-do-tu-duy">
+<div class="max-w-container-max mx-auto px-margin-desktop md:px-margin-desktop px-margin-mobile">
+<h2 class="font-headline-md text-headline-md mb-12 text-center"><span class="text-marx-red">05.</span> Sơ đồ Tư duy</h2>
+<div class="relative w-full max-w-5xl mx-auto py-8"><div class="absolute inset-0 pointer-events-none hidden md:block"><svg fill="none" height="100%" viewbox="0 0 1000 600" width="100%"><path d="M500 300 L250 150 M500 300 L250 450 M500 300 L750 150 M500 300 L750 450" opacity="0.4" stroke="#dc2626" stroke-dasharray="4 4" stroke-width="1"></path></svg></div><div class="grid grid-cols-1 md:grid-cols-3 gap-12 items-center relative z-10"><div class="space-y-12"><div class="glass-panel p-5 rounded-xl border-l-4 border-marx-red hover:bg-surface-container transition-colors"><div class="flex items-center gap-3 mb-3"><span class="material-symbols-outlined text-marx-red">history_edu</span><h4 class="font-headline-sm text-white">Nguồn gốc</h4></div><ul class="space-y-2 text-sm text-on-surface-variant"><li class="flex items-center gap-2"><span class="w-1 h-1 bg-marx-red rounded-full"></span>Chu trình T - H - T'</li><li class="flex items-center gap-2"><span class="w-1 h-1 bg-marx-red rounded-full"></span>Hàng hóa Sức lao động</li><li class="flex items-center gap-2"><span class="w-1 h-1 bg-marx-red rounded-full"></span>Lao động trừu tượng</li></ul></div><div class="glass-panel p-5 rounded-xl border-l-4 border-marx-red hover:bg-surface-container transition-colors"><div class="flex items-center gap-3 mb-3"><span class="material-symbols-outlined text-marx-red">balance</span><h4 class="font-headline-sm text-white">Bản chất</h4></div><ul class="space-y-2 text-sm text-on-surface-variant"><li class="flex items-center gap-2"><span class="w-1 h-1 bg-marx-red rounded-full"></span>Quan hệ bóc lột</li><li class="flex items-center gap-2"><span class="w-1 h-1 bg-marx-red rounded-full"></span>Tỷ suất m' &amp; Khối lượng M</li></ul></div></div><div class="flex justify-center"><div class="relative group"><div class="absolute inset-0 bg-marx-red/20 rounded-full blur-3xl group-hover:bg-marx-red/30 transition-colors"></div><div class="relative w-64 h-64 rounded-full border-2 border-marx-red bg-surface-container-highest flex flex-col items-center justify-center text-center p-6 shadow-[0_0_50px_rgba(220,38,38,0.2)]"><span class="material-symbols-outlined text-marx-red text-5xl mb-2">monetization_on</span><h3 class="font-headline-md text-white leading-tight">Giá trị<br/>thặng dư</h3><span class="text-marx-red font-label-caps text-2xl mt-2">(m)</span></div></div></div><div class="space-y-12"><div class="glass-panel p-5 rounded-xl border-r-4 border-marx-yellow hover:bg-surface-container transition-colors text-right"><div class="flex items-center justify-end gap-3 mb-3"><h4 class="font-headline-sm text-white">Cấu trúc</h4><span class="material-symbols-outlined text-marx-yellow">account_tree</span></div><ul class="space-y-2 text-sm text-on-surface-variant"><li class="flex items-center justify-end gap-2">Tư bản bất biến (c)<span class="w-1 h-1 bg-marx-yellow rounded-full"></span></li><li class="flex items-center justify-end gap-2">Tư bản khả biến (v)<span class="w-1 h-1 bg-marx-yellow rounded-full"></span></li></ul></div><div class="glass-panel p-5 rounded-xl border-r-4 border-marx-yellow hover:bg-surface-container transition-colors text-right"><div class="flex items-center justify-end gap-3 mb-3"><h4 class="font-headline-sm text-white">Phương pháp</h4><span class="material-symbols-outlined text-marx-yellow">trending_up</span></div><ul class="space-y-2 text-sm text-on-surface-variant"><li class="flex items-center justify-end gap-2">Thặng dư Tuyệt đối<span class="w-1 h-1 bg-marx-yellow rounded-full"></span></li><li class="flex items-center justify-end gap-2">Thặng dư Tương đối<span class="w-1 h-1 bg-marx-yellow rounded-full"></span></li><li class="flex items-center justify-end gap-2">Thặng dư Siêu ngạch<span class="w-1 h-1 bg-marx-yellow rounded-full"></span></li></ul></div></div></div></div>
+</div>
+</section>
+<!-- Section 6: Thực Tiễn & Kết Luận -->
+<section class="py-xl relative animate-fade-up" id="thuc-tien">
+<div class="max-w-container-max mx-auto px-margin-desktop md:px-margin-desktop px-margin-mobile">
+<h2 class="font-headline-md text-headline-md mb-8 text-center"><span class="text-marx-red">06.</span> Ý Nghĩa Thực Tiễn &amp; Kết Luận</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+<!-- 4.0 Context -->
+<div class="glass-panel p-8 rounded-xl">
+<h3 class="font-headline-sm text-headline-sm text-marx-yellow mb-4">Trong Bối Cảnh Cách Mạng 4.0</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Sự xuất hiện của AI, Robot tự động hóa làm tăng đột biến cấu tạo hữu cơ của tư bản (c/v tăng). Máy móc (c) dù hiện đại đến đâu cũng chỉ chuyển dịch giá trị chứ không tạo ra giá trị mới. Lao động trí tuệ (v) ngày càng tinh hàm, tạo ra lượng giá trị thặng dư khổng lồ. Mâu thuẫn giữa tư bản và lao động chuyển sang hình thái tinh vi hơn thông qua bóc lột chất xám và dữ liệu người dùng.</p>
+</div>
+<!-- Vietnam Context -->
+<div class="glass-panel p-8 rounded-xl">
+<h3 class="font-headline-sm text-headline-sm text-marx-red mb-4">Vận Dụng Tại Việt Nam</h3>
+<ul class="space-y-4 text-on-surface-variant font-body-md">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-marx-red text-sm mt-1">check_circle</span>
+<span>Thừa nhận và khuyến khích kinh tế tư nhân phát triển để giải phóng sức sản xuất.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-marx-red text-sm mt-1">check_circle</span>
+<span>Nhà nước điều tiết để ngăn chặn bóc lột quá mức (luật lao động, thuế, an sinh xã hội).</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-marx-red text-sm mt-1">check_circle</span>
+<span>Hướng tới phân phối hài hòa, đảm bảo quyền lợi của người lao động trong nền kinh tế thị trường định hướng XHCN.</span>
+</li>
+</ul>
+</div>
+</div>
+<!-- General Conclusion -->
+<div class="bg-surface-container-high p-8 rounded-xl border border-marx-red/30 text-center max-w-4xl mx-auto">
+<h3 class="font-headline-sm text-headline-sm text-white mb-4">Kết Luận Chung</h3>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+                Lý luận giá trị thặng dư không chỉ là công cụ phân tích phê phán chủ nghĩa tư bản mà còn cung cấp phương pháp luận khoa học để nhìn nhận các quan hệ kinh tế hiện đại. Việc hiểu rõ nguồn gốc tạo ra giá trị giúp chúng ta có cơ sở để xây dựng các chính sách kinh tế - xã hội nhằm bảo vệ người lao động và hướng tới một xã hội công bằng, tiến bộ hơn.
+            </p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<script>
+    // --- Simulator Logic ---
+    document.addEventListener('DOMContentLoaded', () => {
+        const inC = document.getElementById('input-c');
+        const inV = document.getElementById('input-v');
+        const inM = document.getElementById('input-m');
+        
+        const valC = document.getElementById('val-c');
+        const valV = document.getElementById('val-v');
+        const valM = document.getElementById('val-m');
+        
+        const totalW = document.getElementById('total-w');
+        const totalRate = document.getElementById('total-rate');
+        
+        const barC = document.getElementById('bar-c');
+        const barV = document.getElementById('bar-v');
+        const barM = document.getElementById('bar-m');
+        
+        const labelC = document.getElementById('label-c');
+        const labelV = document.getElementById('label-v');
+        const labelM = document.getElementById('label-m');
+
+        const insightText = document.getElementById('dynamic-insight');
+
+        function updateSimulator() {
+            const c = parseInt(inC.value);
+            const v = parseInt(inV.value);
+            const m = parseInt(inM.value);
+            
+            const w = c + v + m;
+            const rate = ((m / v) * 100).toFixed(1);
+            const orgComp = (c / v).toFixed(1);
+            
+            // Update Text Values
+            valC.textContent = c;
+            valV.textContent = v;
+            valM.textContent = m;
+            totalW.textContent = w;
+            totalRate.textContent = rate + '%';
+            
+            // Update Bars (Percentages)
+            const pC = (c / w) * 100;
+            const pV = (v / w) * 100;
+            const pM = (m / w) * 100;
+            
+            barC.style.width = `${pC}%`;
+            barV.style.width = `${pV}%`;
+            barM.style.width = `${pM}%`;
+            
+            labelC.style.width = `${pC}%`;
+            labelV.style.width = `${pV}%`;
+            labelM.style.width = `${pM}%`;
+
+            // Dynamic Insight Logic
+            let insight = `Với tỷ suất m' = ${rate}%, cấu tạo hữu cơ tư bản (c/v) là ${orgComp}:1. `;
+            
+            if (m > v) {
+                insight += `Mức bóc lột cao: thời gian lao động thặng dư dài hơn thời gian lao động tất yếu. Công nhân đang tạo ra lượng giá trị mới gấp ${((v+m)/v).toFixed(1)} lần giá trị sức lao động của họ.`;
+            } else if (m === v) {
+                insight += `Người công nhân làm việc nửa thời gian để tạo ra giá trị bằng tiền lương (v), và nửa thời gian còn lại làm việc không công (m).`;
+            } else {
+                insight += `Mức bóc lột thấp: thời gian lao động tất yếu vẫn chiếm ưu thế trong ngày lao động.`;
+            }
+
+            if(c > v * 5) {
+                insight += ` Lưu ý: Cấu tạo hữu cơ cao cho thấy tự động hóa và máy móc (c) đóng vai trò lớn, có thể dẫn đến xu hướng tỷ suất lợi nhuận giảm.`;
+            }
+
+            insightText.textContent = insight;
+        }
+
+        inC.addEventListener('input', updateSimulator);
+        inV.addEventListener('input', updateSimulator);
+        inM.addEventListener('input', updateSimulator);
+        
+        // Initial call
+        updateSimulator();
+
+        // --- Scroll Animations ---
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                } else {
+                    entry.target.classList.remove('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.scroll-fade-up').forEach(el => {
+            observer.observe(el);
+        });
+
+        // --- Section Appear/Disappear Animations ---
+        const sectionObserverOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                } else {
+                    entry.target.classList.remove('is-visible');
+                }
+            });
+        }, sectionObserverOptions);
+
+        const animatedSections = [
+            '.animate-fade-left',
+            '.animate-scale-in',
+            '.animate-rotate-in',
+            '.animate-fade-up'
+        ];
+        
+        animatedSections.forEach(selector => {
+            document.querySelectorAll(selector).forEach(el => {
+                sectionObserver.observe(el);
+            });
+        });
+
+        // --- Timeline Scroll Progress ---
+        const timelineContainer = document.getElementById('timeline-container');
+        const timelineProgress = document.querySelector('.timeline-progress');
+        const timelineNodes = document.querySelectorAll('.scroll-fade-up');
+
+        window.addEventListener('scroll', () => {
+            if(!timelineContainer || !timelineProgress) return;
+            const rect = timelineContainer.getBoundingClientRect();
+            const viewportHeight = window.innerHeight;
+            
+            // Calculate Progress Line
+            if (rect.top < viewportHeight / 2) {
+                const scrolled = (viewportHeight / 2) - rect.top;
+                const total = rect.height;
+                let progress = (scrolled / total) * 100;
+                progress = Math.max(0, Math.min(100, progress));
+                timelineProgress.style.height = `${progress}%`;
+            } else {
+                timelineProgress.style.height = '0%';
+            }
+
+            // Highlight Active Nodes
+            timelineNodes.forEach(node => {
+                const nodeRect = node.getBoundingClientRect();
+                // Highlight when element is near the middle of the screen
+                if (nodeRect.top < viewportHeight * 0.6 && nodeRect.bottom > viewportHeight * 0.4) {
+                    node.classList.add('active');
+                } else {
+                    node.classList.remove('active');
+                }
+            });
+        });
+        
+    });
+</script>
+</body></html>
