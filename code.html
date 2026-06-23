@@ -3,7 +3,7 @@
 <html class="dark scroll-smooth" lang="vi"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Lý Luận Giá Trị Thặng Dư - Tư Bản Luận UI</title>
+<title>Kinh tế Chính trị Mác - Lênin | Giá trị thặng dư</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&amp;family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&amp;family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
@@ -252,12 +252,278 @@
             transform: translateY(0);
         }
 
-        .mindmap-connectors path {
-            stroke: #ef4444;
-            stroke-width: 2.5;
-            stroke-dasharray: 10 6;
+        /* Radial mind map */
+        .rmap-wrap {
+            max-width: 1080px;
+            margin: 0 auto;
+        }
+
+        .rmap-subtitle {
+            max-width: 40rem;
+            margin: 0 auto 2rem;
+            text-align: center;
+            line-height: 1.65;
+        }
+
+        .rmap-board {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 10 / 7.2;
+            min-height: 580px;
+            margin-bottom: 1.5rem;
+            border-radius: 1.25rem;
+            background:
+                radial-gradient(ellipse 70% 55% at 50% 48%, rgba(220, 38, 38, 0.07) 0%, transparent 70%),
+                linear-gradient(165deg, rgba(255, 255, 255, 0.04) 0%, rgba(23, 31, 51, 0.35) 100%);
+            border: 1px solid rgba(218, 226, 253, 0.1);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 20px 50px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+
+        .rmap-board::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(rgba(218, 226, 253, 0.04) 1px, transparent 1px);
+            background-size: 28px 28px;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        .rmap-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .rmap-svg--back { z-index: 2; }
+        .rmap-svg--front { z-index: 11; }
+
+        .rmap-svg .link-main {
+            fill: none;
+            stroke-width: 3.5;
+            stroke-linecap: round;
+            opacity: 0.95;
+            filter: drop-shadow(0 0 10px currentColor);
+        }
+
+        .rmap-svg .link-sub {
+            fill: none;
+            stroke-width: 2;
+            stroke-dasharray: 6 5;
+            stroke-linecap: round;
             opacity: 0.9;
-            filter: drop-shadow(0 0 6px rgba(220, 38, 38, 0.55));
+            filter: drop-shadow(0 0 4px currentColor);
+        }
+
+        .rmap-center {
+            position: absolute;
+            left: 50%;
+            top: 46%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            text-align: center;
+            padding: 1.35rem 1.85rem;
+            border-radius: 1.15rem;
+            background: linear-gradient(145deg, rgba(127, 29, 29, 0.6), rgba(23, 31, 51, 0.96));
+            border: 2px solid rgba(220, 38, 38, 0.9);
+            box-shadow: 0 0 48px rgba(220, 38, 38, 0.32), 0 10px 36px rgba(0, 0, 0, 0.45);
+            max-width: 16rem;
+        }
+
+        .rmap-center::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: inherit;
+            border: 1px solid rgba(255, 180, 171, 0.2);
+            pointer-events: none;
+        }
+
+        .rmap-center-formula {
+            display: inline-block;
+            margin-top: 0.65rem;
+            padding: 0.25rem 0.65rem;
+            border-radius: 9999px;
+            font-size: 0.68rem;
+            letter-spacing: 0.02em;
+            color: rgba(255, 180, 171, 0.95);
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(220, 38, 38, 0.35);
+        }
+
+        .rmap-center-icon {
+            font-size: 2rem;
+            color: #ffb4ab;
+            margin-bottom: 0.35rem;
+        }
+
+        .rmap-branch {
+            position: absolute;
+            z-index: 8;
+            display: flex;
+            gap: 0.65rem;
+        }
+
+        .rmap-branch--tl { left: 0.5%; top: 1.5%; flex-direction: row-reverse; align-items: flex-start; max-width: 44%; }
+        .rmap-branch--tr { right: 0.5%; top: 1.5%; flex-direction: row; align-items: flex-start; max-width: 44%; }
+        .rmap-branch--br { right: 0.5%; bottom: 4%; flex-direction: row; align-items: flex-end; max-width: 44%; }
+        .rmap-branch--bl { left: 0.5%; bottom: 4%; flex-direction: row-reverse; align-items: flex-end; max-width: 44%; }
+        .rmap-branch--bc { left: 50%; bottom: 1%; transform: translateX(-50%); flex-direction: column; align-items: center; max-width: 36%; gap: 0.45rem; }
+
+        .rmap-hub {
+            position: relative;
+            z-index: 12;
+            flex-shrink: 0;
+            align-self: center;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.55rem 1.1rem;
+            border-radius: 9999px;
+            font-family: 'EB Garamond', serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #fff;
+            white-space: nowrap;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .rmap-hub:hover {
+            transform: scale(1.04);
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+        }
+
+        .rmap-hub-icon {
+            font-size: 1.05rem;
+            opacity: 0.95;
+        }
+
+        .rmap-branch--tl .rmap-hub { background: linear-gradient(135deg, #0369a1, #0ea5e9); border: 1px solid #7dd3fc; }
+        .rmap-branch--tr .rmap-hub { background: linear-gradient(135deg, #047857, #10b981); border: 1px solid #6ee7b7; }
+        .rmap-branch--br .rmap-hub { background: linear-gradient(135deg, #6d28d9, #8b5cf6); border: 1px solid #c4b5fd; }
+        .rmap-branch--bl .rmap-hub { background: linear-gradient(135deg, #c2410c, #f97316); border: 1px solid #fdba74; }
+        .rmap-branch--bc .rmap-hub { background: linear-gradient(135deg, #be123c, #f43f5e); border: 1px solid #fda4af; }
+
+        .rmap-subs {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            position: relative;
+            z-index: 10;
+            justify-content: center;
+        }
+
+        .rmap-branch--tl .rmap-subs,
+        .rmap-branch--bl .rmap-subs { align-items: flex-end; }
+        .rmap-branch--tr .rmap-subs,
+        .rmap-branch--br .rmap-subs { align-items: flex-start; }
+        .rmap-branch--bc .rmap-subs { align-items: center; margin-top: 0.15rem; }
+
+        .rmap-sub {
+            display: inline-block;
+            position: relative;
+            z-index: 10;
+            padding: 0.35rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.72rem;
+            line-height: 1.35;
+            color: rgba(218, 226, 253, 0.95);
+            background: rgba(12, 18, 34, 0.92);
+            backdrop-filter: blur(8px);
+            transition: background 0.2s ease, border-color 0.2s ease;
+        }
+
+        .rmap-branch--tl .rmap-sub { border: 1px solid rgba(14, 165, 233, 0.5); }
+        .rmap-branch--tr .rmap-sub { border: 1px solid rgba(16, 185, 129, 0.5); }
+        .rmap-branch--br .rmap-sub { border: 1px solid rgba(139, 92, 246, 0.5); }
+        .rmap-branch--bl .rmap-sub { border: 1px solid rgba(249, 115, 22, 0.5); }
+        .rmap-branch--bc .rmap-sub { border: 1px solid rgba(244, 63, 94, 0.5); }
+
+        .rmap-sub:hover {
+            background: rgba(22, 32, 56, 0.96);
+        }
+
+        .rmap-legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.75rem 1.25rem;
+            padding: 1rem 1.25rem;
+            border-radius: 0.75rem;
+            background: rgba(23, 31, 51, 0.65);
+            border: 1px solid rgba(218, 226, 253, 0.08);
+        }
+
+        .rmap-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            font-size: 0.7rem;
+            color: rgba(218, 226, 253, 0.65);
+        }
+
+        .rmap-legend-dot {
+            width: 0.55rem;
+            height: 0.55rem;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .rmap-mobile {
+            display: none;
+        }
+
+        @media (max-width: 900px) {
+            .rmap-board,
+            .rmap-legend {
+                display: none;
+            }
+
+            .rmap-mobile {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .rmap-mobile-card {
+                border-radius: 0.75rem;
+                padding: 1rem 1.125rem;
+                background: rgba(23, 31, 51, 0.7);
+                border: 1px solid rgba(218, 226, 253, 0.1);
+            }
+
+            .rmap-mobile-card--center {
+                text-align: center;
+                border-color: rgba(220, 38, 38, 0.5);
+                background: linear-gradient(145deg, rgba(127, 29, 29, 0.35), rgba(23, 31, 51, 0.9));
+            }
+
+            .rmap-mobile-hub {
+                font-family: 'EB Garamond', serif;
+                font-size: 1.05rem;
+                font-weight: 600;
+                color: #fff;
+                margin-bottom: 0.5rem;
+            }
+
+            .rmap-mobile-subs {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.35rem;
+            }
+
+            .rmap-mobile-subs span {
+                font-size: 0.72rem;
+                padding: 0.3rem 0.65rem;
+                border-radius: 9999px;
+                background: rgba(255, 255, 255, 0.06);
+                border: 1px solid rgba(218, 226, 253, 0.12);
+                color: rgba(218, 226, 253, 0.85);
+            }
         }
 
         /* Material Symbols */
@@ -377,16 +643,17 @@
 <!-- TopNavBar -->
 <nav class="fixed top-0 left-0 w-full z-50 bg-surface-container/80 backdrop-blur-xl border-b border-on-surface-variant/10 shadow-sm">
 <div class="flex justify-between items-center w-full px-margin-desktop h-16 max-w-container-max mx-auto">
-<div class="font-display-lg text-headline-sm font-semibold text-primary dark:text-primary transition-all duration-300" id="nav-title">
-            Lý Luận Giá Trị Thặng Dư
+<div class="font-display-lg text-sm md:text-headline-sm font-semibold text-primary dark:text-primary leading-tight max-w-[11rem] md:max-w-none" id="nav-title">
+            KINH TẾ CHÍNH TRỊ MÁC - LÊNIN
         </div>
-<div class="hidden md:flex space-x-8">
-<a class="nav-link text-primary font-bold border-b-2 border-primary pb-1 hover:text-primary transition-colors duration-200" data-section="mo-dau" href="#mo-dau">Mở đầu</a>
-<a class="nav-link text-on-surface-variant font-body-md hover:text-primary transition-colors duration-200 border-b-2 border-transparent pb-1" data-section="nguon-goc" href="#nguon-goc">Nguồn gốc</a>
-<a class="nav-link text-on-surface-variant font-body-md hover:text-primary transition-colors duration-200 border-b-2 border-transparent pb-1" data-section="cau-truc" href="#cau-truc">Cấu trúc</a>
-<a class="nav-link text-on-surface-variant font-body-md hover:text-primary transition-colors duration-200 border-b-2 border-transparent pb-1" data-section="mo-phong" href="#mo-phong">Mô phỏng</a>
-<a class="nav-link text-on-surface-variant font-body-md hover:text-primary transition-colors duration-200 border-b-2 border-transparent pb-1" data-section="phuong-phap" href="#phuong-phap">Phương pháp</a>
-<a class="nav-link text-on-surface-variant font-body-md hover:text-primary transition-colors duration-200 border-b-2 border-transparent pb-1" data-section="thuc-tien" href="#thuc-tien">Thực tiễn</a>
+<div class="hidden md:flex flex-wrap justify-end gap-x-4 lg:gap-x-6 gap-y-1 max-w-[70%]">
+<a class="nav-link text-primary font-bold border-b-2 border-primary pb-1 hover:text-primary transition-colors duration-200 text-sm whitespace-nowrap" data-section="mo-dau" href="#mo-dau">Mở đầu</a>
+<a class="nav-link text-on-surface-variant font-body-md hover:text-primary transition-colors duration-200 border-b-2 border-transparent pb-1 text-sm whitespace-nowrap" data-section="nguon-goc" href="#nguon-goc">Nguồn gốc</a>
+<a class="nav-link text-on-surface-variant font-body-md hover:text-primary transition-colors duration-200 border-b-2 border-transparent pb-1 text-sm whitespace-nowrap" data-section="cau-truc" href="#cau-truc">Cấu trúc</a>
+<a class="nav-link text-on-surface-variant font-body-md hover:text-primary transition-colors duration-200 border-b-2 border-transparent pb-1 text-sm whitespace-nowrap" data-section="mo-phong" href="#mo-phong">Mô phỏng</a>
+<a class="nav-link text-on-surface-variant font-body-md hover:text-primary transition-colors duration-200 border-b-2 border-transparent pb-1 text-sm whitespace-nowrap" data-section="phuong-phap" href="#phuong-phap">Phương pháp</a>
+<a class="nav-link text-on-surface-variant font-body-md hover:text-primary transition-colors duration-200 border-b-2 border-transparent pb-1 text-sm whitespace-nowrap" data-section="so-do-tu-duy" href="#so-do-tu-duy">Sơ đồ tư duy</a>
+<a class="nav-link text-on-surface-variant font-body-md hover:text-primary transition-colors duration-200 border-b-2 border-transparent pb-1 text-sm whitespace-nowrap" data-section="thuc-tien" href="#thuc-tien">Thực tiễn</a>
 </div>
 </div>
 </nav>
@@ -648,11 +915,120 @@
 </div>
 </div>
 </section>
-<!-- Redesigned Section 5.5: Mindmap -->
+<!-- Section 5: Sơ đồ Tư duy -->
 <section class="py-xl relative animate-scale-in" id="so-do-tu-duy">
 <div class="max-w-container-max mx-auto px-margin-desktop md:px-margin-desktop px-margin-mobile">
-<h2 class="font-headline-md text-headline-md mb-12 text-center"><span class="text-marx-red">05.</span> Sơ đồ Tư duy</h2>
-<div class="relative w-full max-w-5xl mx-auto py-8"><div class="absolute inset-0 pointer-events-none hidden md:block mindmap-connectors"><svg fill="none" height="100%" viewBox="0 0 1000 600" width="100%"><path d="M500 300 L250 150 M500 300 L250 450 M500 300 L750 150 M500 300 L750 450"></path></svg></div><div class="grid grid-cols-1 md:grid-cols-3 gap-12 items-center relative z-10"><div class="space-y-12"><div class="glass-panel p-5 rounded-xl border-l-4 border-marx-red hover:bg-surface-container transition-colors"><div class="flex items-center gap-3 mb-3"><span class="material-symbols-outlined text-marx-red">history_edu</span><h4 class="font-headline-sm text-white">Nguồn gốc</h4></div><ul class="space-y-2 text-sm text-on-surface-variant"><li class="flex items-center gap-2"><span class="w-1 h-1 bg-marx-red rounded-full"></span>Chu trình T - H - T'</li><li class="flex items-center gap-2"><span class="w-1 h-1 bg-marx-red rounded-full"></span>Hàng hóa Sức lao động</li><li class="flex items-center gap-2"><span class="w-1 h-1 bg-marx-red rounded-full"></span>Lao động trừu tượng</li></ul></div><div class="glass-panel p-5 rounded-xl border-l-4 border-marx-red hover:bg-surface-container transition-colors"><div class="flex items-center gap-3 mb-3"><span class="material-symbols-outlined text-marx-red">balance</span><h4 class="font-headline-sm text-white">Bản chất</h4></div><ul class="space-y-2 text-sm text-on-surface-variant"><li class="flex items-center gap-2"><span class="w-1 h-1 bg-marx-red rounded-full"></span>Quan hệ bóc lột</li><li class="flex items-center gap-2"><span class="w-1 h-1 bg-marx-red rounded-full"></span>Tỷ suất m' &amp; Khối lượng M</li></ul></div></div><div class="flex justify-center"><div class="relative group"><div class="absolute inset-0 bg-marx-red/20 rounded-full blur-3xl group-hover:bg-marx-red/30 transition-colors"></div><div class="relative w-64 h-64 rounded-full border-2 border-marx-red bg-surface-container-highest flex flex-col items-center justify-center text-center p-6 shadow-[0_0_50px_rgba(220,38,38,0.2)]"><span class="material-symbols-outlined text-marx-red text-5xl mb-2">monetization_on</span><h3 class="font-headline-md text-white leading-tight">Giá trị<br/>thặng dư</h3><span class="text-marx-red font-label-caps text-2xl mt-2">(m)</span></div></div></div><div class="space-y-12"><div class="glass-panel p-5 rounded-xl border-r-4 border-marx-yellow hover:bg-surface-container transition-colors text-right"><div class="flex items-center justify-end gap-3 mb-3"><h4 class="font-headline-sm text-white">Cấu trúc</h4><span class="material-symbols-outlined text-marx-yellow">account_tree</span></div><ul class="space-y-2 text-sm text-on-surface-variant"><li class="flex items-center justify-end gap-2">Tư bản bất biến (c)<span class="w-1 h-1 bg-marx-yellow rounded-full"></span></li><li class="flex items-center justify-end gap-2">Tư bản khả biến (v)<span class="w-1 h-1 bg-marx-yellow rounded-full"></span></li></ul></div><div class="glass-panel p-5 rounded-xl border-r-4 border-marx-yellow hover:bg-surface-container transition-colors text-right"><div class="flex items-center justify-end gap-3 mb-3"><h4 class="font-headline-sm text-white">Phương pháp</h4><span class="material-symbols-outlined text-marx-yellow">trending_up</span></div><ul class="space-y-2 text-sm text-on-surface-variant"><li class="flex items-center justify-end gap-2">Thặng dư Tuyệt đối<span class="w-1 h-1 bg-marx-yellow rounded-full"></span></li><li class="flex items-center justify-end gap-2">Thặng dư Tương đối<span class="w-1 h-1 bg-marx-yellow rounded-full"></span></li><li class="flex items-center justify-end gap-2">Thặng dư Siêu ngạch<span class="w-1 h-1 bg-marx-yellow rounded-full"></span></li></ul></div></div></div></div>
+<h2 class="font-headline-md text-headline-md mb-4 text-center"><span class="text-marx-red">05.</span> Sơ đồ Tư duy</h2>
+<p class="font-body-md text-body-md text-on-surface-variant rmap-subtitle">Tổng hợp lý luận giá trị thặng dư theo báo cáo nghiên cứu — <strong class="text-white">đường liền</strong> nối từ trung tâm vào khung chính, <strong class="text-white">đường đứt</strong> từ khung chính xuống các ý thành phần.</p>
+
+<div class="rmap-wrap">
+<div class="rmap-board">
+<svg class="rmap-svg rmap-svg--back" viewBox="0 0 1000 700" preserveAspectRatio="none" aria-hidden="true">
+<g id="rmap-links-main"></g>
+</svg>
+
+<div class="rmap-center">
+<span class="material-symbols-outlined rmap-center-icon">account_balance</span>
+<h3 class="font-headline-sm text-white leading-snug">Lý luận Giá trị Thặng Dư</h3>
+<p class="text-marx-red font-label-caps text-lg mt-1">(m)</p>
+<p class="font-caption text-caption text-on-surface-variant mt-2">Hòn đá tảng học thuyết kinh tế Mác</p>
+<span class="rmap-center-formula">W = c + v + m</span>
+</div>
+
+<div class="rmap-branch rmap-branch--tl">
+<div class="rmap-hub"><span class="material-symbols-outlined rmap-hub-icon">menu_book</span> Khái quát chung</div>
+<div class="rmap-subs">
+<span class="rmap-sub">Hòn đá tảng KT Mác</span>
+<span class="rmap-sub">Bối cảnh lịch sử KTCT</span>
+<span class="rmap-sub">Cơ sở triết học ĐCN</span>
+<span class="rmap-sub">Ý nghĩa phương pháp luận</span>
+</div>
+</div>
+
+<div class="rmap-branch rmap-branch--tr">
+<div class="rmap-hub"><span class="material-symbols-outlined rmap-hub-icon">account_tree</span> Nguồn gốc sinh ra m</div>
+<div class="rmap-subs">
+<span class="rmap-sub">Chu trình T → H → T'</span>
+<span class="rmap-sub">Hàng hóa sức lao động</span>
+<span class="rmap-sub">LĐ cụ thể &amp; trừu tượng</span>
+<span class="rmap-sub">Mâu thuẫn công thức chung</span>
+</div>
+</div>
+
+<div class="rmap-branch rmap-branch--br">
+<div class="rmap-hub"><span class="material-symbols-outlined rmap-hub-icon">trending_up</span> Phương pháp gia tăng m</div>
+<div class="rmap-subs">
+<span class="rmap-sub">Thặng dư tuyệt đối</span>
+<span class="rmap-sub">Thặng dư tương đối</span>
+<span class="rmap-sub">Thặng dư siêu ngạch</span>
+<span class="rmap-sub">Che đậy: p, z, R</span>
+</div>
+</div>
+
+<div class="rmap-branch rmap-branch--bl">
+<div class="rmap-hub"><span class="material-symbols-outlined rmap-hub-icon">public</span> Vận dụng thực tiễn</div>
+<div class="rmap-subs">
+<span class="rmap-sub">KT thị trường ĐH XHCN</span>
+<span class="rmap-sub">Cách mạng 4.0</span>
+<span class="rmap-sub">Nhà nước điều tiết</span>
+<span class="rmap-sub">Bảo vệ người lao động</span>
+</div>
+</div>
+
+<div class="rmap-branch rmap-branch--bc">
+<div class="rmap-hub"><span class="material-symbols-outlined rmap-hub-icon">schema</span> Bản chất &amp; cấu trúc</div>
+<div class="rmap-subs">
+<span class="rmap-sub">Quan hệ bóc lột</span>
+<span class="rmap-sub">W = c + v + m</span>
+<span class="rmap-sub">Tư bản c &amp; v</span>
+<span class="rmap-sub">m' và M — đo lường</span>
+</div>
+</div>
+
+<svg class="rmap-svg rmap-svg--front" viewBox="0 0 1000 700" preserveAspectRatio="none" aria-hidden="true">
+<g id="rmap-links-sub"></g>
+</svg>
+</div>
+
+<div class="rmap-legend">
+<span class="rmap-legend-item"><span class="rmap-legend-dot bg-[#dc2626]"></span> Chủ đề trung tâm</span>
+<span class="rmap-legend-item"><span class="rmap-legend-dot bg-sky-400"></span> Khái quát chung</span>
+<span class="rmap-legend-item"><span class="rmap-legend-dot bg-emerald-400"></span> Nguồn gốc</span>
+<span class="rmap-legend-item"><span class="rmap-legend-dot bg-violet-400"></span> Phương pháp</span>
+<span class="rmap-legend-item"><span class="rmap-legend-dot bg-orange-400"></span> Thực tiễn</span>
+<span class="rmap-legend-item"><span class="rmap-legend-dot bg-rose-400"></span> Bản chất &amp; cấu trúc</span>
+</div>
+
+<!-- Mobile fallback -->
+<div class="rmap-mobile">
+<div class="rmap-mobile-card rmap-mobile-card--center">
+<span class="material-symbols-outlined text-marx-red text-3xl mb-2">account_balance</span>
+<h3 class="font-headline-sm text-white">Lý luận Giá trị Thặng Dư (m)</h3>
+<p class="text-xs text-on-surface-variant mt-1">Hòn đá tảng học thuyết kinh tế Mác</p>
+</div>
+<div class="rmap-mobile-card" style="border-top: 3px solid #0ea5e9">
+<p class="rmap-mobile-hub text-sky-400">Khái quát chung</p>
+<div class="rmap-mobile-subs"><span>Hòn đá tảng KT Mác</span><span>Bối cảnh lịch sử</span><span>Cơ sở triết học ĐCN</span><span>Ý nghĩa PPL</span></div>
+</div>
+<div class="rmap-mobile-card" style="border-top: 3px solid #10b981">
+<p class="rmap-mobile-hub text-emerald-400">Nguồn gốc sinh ra m</p>
+<div class="rmap-mobile-subs"><span>T → H → T'</span><span>Sức lao động</span><span>LĐ hai mặt</span><span>Mâu thuẫn công thức</span></div>
+</div>
+<div class="rmap-mobile-card" style="border-top: 3px solid #f43f5e">
+<p class="rmap-mobile-hub text-rose-400">Bản chất &amp; cấu trúc</p>
+<div class="rmap-mobile-subs"><span>Quan hệ bóc lột</span><span>W = c + v + m</span><span>c &amp; v</span><span>m' và M</span></div>
+</div>
+<div class="rmap-mobile-card" style="border-top: 3px solid #8b5cf6">
+<p class="rmap-mobile-hub text-violet-400">Phương pháp gia tăng m</p>
+<div class="rmap-mobile-subs"><span>Tuyệt đối</span><span>Tương đối</span><span>Siêu ngạch</span><span>p, z, R</span></div>
+</div>
+<div class="rmap-mobile-card" style="border-top: 3px solid #f97316">
+<p class="rmap-mobile-hub text-orange-400">Vận dụng thực tiễn</p>
+<div class="rmap-mobile-subs"><span>KT ĐH XHCN</span><span>CM 4.0</span><span>Nhà nước điều tiết</span><span>Bảo vệ LĐ</span></div>
+</div>
+</div>
+</div>
+
 </div>
 </section>
 <!-- Section 6: Thực Tiễn & Kết Luận -->
@@ -922,28 +1298,47 @@
 
         // --- Nav Scrollspy ---
         const navSections = [
-            { id: 'mo-dau', title: 'Lý Luận Giá Trị Thặng Dư' },
-            { id: 'nguon-goc', title: 'Nguồn Gốc Giá Trị Thặng Dư' },
-            { id: 'cau-truc', title: 'Cấu Trúc Tư Bản' },
-            { id: 'mo-phong', title: 'Mô Phỏng Sản Xuất' },
-            { id: 'phuong-phap', title: 'Phương Pháp Sản Xuất' },
-            { id: 'thuc-tien', title: 'Ý Nghĩa Thực Tiễn' }
+            { id: 'mo-dau' },
+            { id: 'nguon-goc' },
+            { id: 'cau-truc' },
+            { id: 'mo-phong' },
+            { id: 'phuong-phap' },
+            { id: 'so-do-tu-duy' },
+            { id: 'thuc-tien' }
         ];
-        const navTitle = document.getElementById('nav-title');
         const navLinks = document.querySelectorAll('.nav-link');
         const navBar = document.querySelector('nav');
         const getNavOffset = () => (navBar ? navBar.offsetHeight : 64) + 16;
+        let navClickLock = null;
+
+        function getSectionMarker(sectionEl) {
+            return sectionEl.querySelector('h2') || sectionEl;
+        }
+
+        function getSectionScrollTop(sectionEl) {
+            const marker = getSectionMarker(sectionEl);
+            return marker.getBoundingClientRect().top + window.scrollY - getNavOffset();
+        }
 
         function scrollToSection(sectionId, smooth = true) {
             const target = document.getElementById(sectionId);
             if (!target) return;
 
-            const top = target.getBoundingClientRect().top + window.scrollY - getNavOffset();
+            const top = getSectionScrollTop(target);
             window.scrollTo({ top, behavior: smooth ? 'smooth' : 'auto' });
             history.replaceState(null, '', `#${sectionId}`);
 
             if (navSections.some(s => s.id === sectionId)) {
                 setActiveNav(sectionId);
+                navClickLock = sectionId;
+                if (smooth) {
+                    setTimeout(() => {
+                        navClickLock = null;
+                        updateActiveNav();
+                    }, 700);
+                } else {
+                    navClickLock = null;
+                }
             }
         }
 
@@ -974,24 +1369,28 @@
                 link.classList.toggle('font-body-md', !isActive);
                 link.classList.toggle('border-transparent', !isActive);
             });
-            const section = navSections.find(s => s.id === sectionId);
-            if (section && navTitle) {
-                navTitle.textContent = section.title;
-            }
         }
 
         function updateActiveNav() {
-            const anchor = getNavOffset() + 20;
+            if (navClickLock) {
+                setActiveNav(navClickLock);
+                return;
+            }
+
+            const scrollPos = window.scrollY + getNavOffset() + 24;
             let currentId = navSections[0].id;
 
-            navSections.forEach(({ id }) => {
+            for (let i = navSections.length - 1; i >= 0; i--) {
+                const { id } = navSections[i];
                 const el = document.getElementById(id);
-                if (!el) return;
-                const marker = el.querySelector('h2') || el;
-                if (marker.getBoundingClientRect().top <= anchor) {
+                if (!el) continue;
+                const marker = getSectionMarker(el);
+                const top = marker.getBoundingClientRect().top + window.scrollY;
+                if (scrollPos >= top) {
                     currentId = id;
+                    break;
                 }
-            });
+            }
 
             setActiveNav(currentId);
         }
@@ -1088,6 +1487,137 @@
             onScroll();
         });
         onScroll();
+
+        // --- Radial mind map connectors (center → hub → subs) ---
+        const RMAP_COLORS = {
+            'rmap-branch--tl': '#0ea5e9',
+            'rmap-branch--tr': '#10b981',
+            'rmap-branch--br': '#8b5cf6',
+            'rmap-branch--bl': '#f97316',
+            'rmap-branch--bc': '#f43f5e'
+        };
+        const RMAP_VB = { w: 1000, h: 700 };
+
+        function rmapScale(point, board) {
+            return {
+                x: (point.x / board.clientWidth) * RMAP_VB.w,
+                y: (point.y / board.clientHeight) * RMAP_VB.h
+            };
+        }
+
+        function rmapEdgePoint(rect, boardRect, targetX, targetY) {
+            const x = rect.left - boardRect.left;
+            const y = rect.top - boardRect.top;
+            const cx = x + rect.width / 2;
+            const cy = y + rect.height / 2;
+            const dx = targetX - cx;
+            const dy = targetY - cy;
+            if (dx === 0 && dy === 0) return { x: cx, y: cy };
+            const sx = dx !== 0 ? (rect.width / 2) / Math.abs(dx) : Infinity;
+            const sy = dy !== 0 ? (rect.height / 2) / Math.abs(dy) : Infinity;
+            const s = Math.min(sx, sy);
+            return { x: cx + dx * s, y: cy + dy * s };
+        }
+
+        function rmapHubToSubPath(hubRect, subRect, boardRect, board, isVertical) {
+            const hubCx = hubRect.left - boardRect.left + hubRect.width / 2;
+            const hubCy = hubRect.top - boardRect.top + hubRect.height / 2;
+            const subCx = subRect.left - boardRect.left + subRect.width / 2;
+            const subCy = subRect.top - boardRect.top + subRect.height / 2;
+
+            const from = rmapEdgePoint(hubRect, boardRect, subCx, subCy);
+            const to = rmapEdgePoint(subRect, boardRect, hubCx, hubCy);
+            const s = (p) => rmapScale(p, board);
+
+            let c1, c2;
+            if (isVertical) {
+                const midY = (from.y + to.y) / 2;
+                c1 = { x: from.x, y: midY };
+                c2 = { x: to.x, y: midY };
+            } else {
+                const midX = (from.x + to.x) / 2;
+                c1 = { x: midX, y: from.y };
+                c2 = { x: midX, y: to.y };
+            }
+
+            const sf = s(from);
+            const sc1 = s(c1);
+            const sc2 = s(c2);
+            const st = s(to);
+            return `M ${sf.x} ${sf.y} C ${sc1.x} ${sc1.y}, ${sc2.x} ${sc2.y}, ${st.x} ${st.y}`;
+        }
+
+        function drawRmapConnectors() {
+            const board = document.querySelector('.rmap-board');
+            const mainG = document.getElementById('rmap-links-main');
+            const subG = document.getElementById('rmap-links-sub');
+            const center = document.querySelector('.rmap-center');
+            if (!board || !mainG || !subG || !center || board.clientWidth < 100) return;
+            if (getComputedStyle(board).display === 'none') return;
+
+            mainG.innerHTML = '';
+            subG.innerHTML = '';
+            const boardRect = board.getBoundingClientRect();
+            const centerRect = center.getBoundingClientRect();
+            const centerCx = centerRect.left - boardRect.left + centerRect.width / 2;
+            const centerCy = centerRect.top - boardRect.top + centerRect.height / 2;
+
+            document.querySelectorAll('.rmap-branch').forEach(branch => {
+                const colorKey = Object.keys(RMAP_COLORS).find(cls => branch.classList.contains(cls));
+                const color = RMAP_COLORS[colorKey] || '#94a3b8';
+                const hub = branch.querySelector('.rmap-hub');
+                const subs = branch.querySelectorAll('.rmap-sub');
+                if (!hub) return;
+
+                const hubRect = hub.getBoundingClientRect();
+                const hubCx = hubRect.left - boardRect.left + hubRect.width / 2;
+                const hubCy = hubRect.top - boardRect.top + hubRect.height / 2;
+
+                const mainFrom = rmapEdgePoint(centerRect, boardRect, hubCx, hubCy);
+                const mainTo = rmapEdgePoint(hubRect, boardRect, centerCx, centerCy);
+                const mainScaled = rmapScale(mainFrom, board);
+                const mainScaledTo = rmapScale(mainTo, board);
+                const mx = (mainScaled.x + mainScaledTo.x) / 2;
+                const my = (mainScaled.y + mainScaledTo.y) / 2;
+
+                const mainPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                mainPath.setAttribute('class', 'link-main');
+                mainPath.setAttribute('stroke', color);
+                mainPath.setAttribute('d', `M ${mainScaled.x} ${mainScaled.y} Q ${mx} ${my} ${mainScaledTo.x} ${mainScaledTo.y}`);
+                mainG.appendChild(mainPath);
+
+                const isVertical = branch.classList.contains('rmap-branch--bc');
+                subs.forEach(sub => {
+                    const subRect = sub.getBoundingClientRect();
+                    const subPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    subPath.setAttribute('class', 'link-sub');
+                    subPath.setAttribute('stroke', color);
+                    subPath.setAttribute('d', rmapHubToSubPath(hubRect, subRect, boardRect, board, isVertical));
+                    subG.appendChild(subPath);
+                });
+            });
+        }
+
+        let rmapResizeTimer;
+        function scheduleRmapRedraw() {
+            clearTimeout(rmapResizeTimer);
+            rmapResizeTimer = setTimeout(drawRmapConnectors, 80);
+        }
+
+        window.addEventListener('resize', scheduleRmapRedraw);
+        window.addEventListener('load', () => {
+            scheduleRmapRedraw();
+            document.fonts?.ready?.then(scheduleRmapRedraw);
+        });
+        scheduleRmapRedraw();
+
+        const rmapSection = document.getElementById('so-do-tu-duy');
+        if (rmapSection) {
+            const rmapObserver = new IntersectionObserver((entries) => {
+                if (entries.some(e => e.isIntersecting)) scheduleRmapRedraw();
+            }, { threshold: 0.1 });
+            rmapObserver.observe(rmapSection);
+        }
 
         // --- Section Appear/Disappear Animations ---
         const sectionObserverOptions = {
