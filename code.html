@@ -4,6 +4,10 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Kinh tế Chính trị Mác - Lênin | Giá trị thặng dư</title>
+<script>
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+document.documentElement.style.setProperty('--nav-offset', '112px');
+</script>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&amp;family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&amp;family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
@@ -107,11 +111,23 @@
     </script>
 <style>
         html {
-            scroll-padding-top: 5rem;
+            scroll-padding-top: var(--nav-offset, 7.5rem);
         }
 
         section[id] {
-            scroll-margin-top: 5rem;
+            scroll-margin-top: var(--nav-offset, 7.5rem);
+        }
+
+        main section h2 {
+            scroll-margin-top: var(--nav-offset, 7.5rem);
+        }
+
+        .section-anchor {
+            display: block;
+            height: 0;
+            width: 0;
+            scroll-margin-top: var(--nav-offset, 7.5rem);
+            pointer-events: none;
         }
 
         .glass-panel {
@@ -210,57 +226,49 @@
             box-shadow: 0 0 52px rgba(220, 38, 38, 0.5);
         }
 
-        /* Section Entrance Animations */
+        /* Section Entrance Animations — opacity only to avoid scroll jump */
         .animate-fade-left {
             opacity: 0;
-            transform: translateX(-50px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            transition: opacity 0.8s ease-out;
         }
         .animate-fade-left.is-visible {
             opacity: 1;
-            transform: translateX(0);
         }
         
         .animate-scale-in {
             opacity: 0;
-            transform: scale(0.9);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            transition: opacity 0.8s ease-out;
         }
         .animate-scale-in.is-visible {
             opacity: 1;
-            transform: scale(1);
         }
         
         .animate-rotate-in {
             opacity: 0;
-            transform: rotateX(-15deg) translateY(30px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-            transform-origin: center top;
+            transition: opacity 0.8s ease-out;
         }
         .animate-rotate-in.is-visible {
             opacity: 1;
-            transform: rotateX(0) translateY(0);
         }
         
         .animate-fade-up {
             opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            transition: opacity 0.8s ease-out;
         }
         .animate-fade-up.is-visible {
             opacity: 1;
-            transform: translateY(0);
         }
 
-        /* Radial mind map */
+        /* Radial mind map — layout theo mẫu tham chiếu */
         .rmap-wrap {
-            max-width: 1080px;
+            max-width: 1060px;
             margin: 0 auto;
+            padding: 0 0.25rem;
         }
 
         .rmap-subtitle {
             max-width: 40rem;
-            margin: 0 auto 2rem;
+            margin: 0 auto 1.5rem;
             text-align: center;
             line-height: 1.65;
         }
@@ -268,26 +276,14 @@
         .rmap-board {
             position: relative;
             width: 100%;
-            aspect-ratio: 10 / 7.2;
-            min-height: 580px;
-            margin-bottom: 1.5rem;
-            border-radius: 1.25rem;
-            background:
-                radial-gradient(ellipse 70% 55% at 50% 48%, rgba(220, 38, 38, 0.07) 0%, transparent 70%),
-                linear-gradient(165deg, rgba(255, 255, 255, 0.04) 0%, rgba(23, 31, 51, 0.35) 100%);
-            border: 1px solid rgba(218, 226, 253, 0.1);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 20px 50px rgba(0, 0, 0, 0.25);
-            overflow: hidden;
-        }
-
-        .rmap-board::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image: radial-gradient(rgba(218, 226, 253, 0.04) 1px, transparent 1px);
-            background-size: 28px 28px;
-            pointer-events: none;
-            opacity: 0.5;
+            aspect-ratio: 10 / 7.65;
+            min-height: 660px;
+            max-height: 760px;
+            margin-bottom: 1rem;
+            border-radius: 0.85rem;
+            background: radial-gradient(ellipse 68% 58% at 50% 40%, rgba(220, 38, 38, 0.07) 0%, transparent 70%);
+            border: 1px solid rgba(218, 226, 253, 0.08);
+            overflow: visible;
         }
 
         .rmap-svg {
@@ -296,6 +292,7 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
+            overflow: visible;
         }
 
         .rmap-svg--back { z-index: 2; }
@@ -303,174 +300,180 @@
 
         .rmap-svg .link-main {
             fill: none;
-            stroke-width: 3.5;
+            stroke-width: 2.75;
             stroke-linecap: round;
-            opacity: 0.95;
-            filter: drop-shadow(0 0 10px currentColor);
+            opacity: 0.9;
+            filter: drop-shadow(0 0 6px currentColor);
         }
 
         .rmap-svg .link-sub {
             fill: none;
-            stroke-width: 2;
-            stroke-dasharray: 6 5;
+            stroke-width: 1.5;
+            stroke-dasharray: 4 5;
             stroke-linecap: round;
-            opacity: 0.9;
-            filter: drop-shadow(0 0 4px currentColor);
+            opacity: 0.78;
+        }
+
+        .rmap-svg .link-spine {
+            fill: none;
+            stroke-width: 1.5;
+            stroke-dasharray: 4 5;
+            stroke-linecap: round;
+            opacity: 0.5;
         }
 
         .rmap-center {
             position: absolute;
             left: 50%;
-            top: 46%;
+            top: 37%;
             transform: translate(-50%, -50%);
             z-index: 10;
             text-align: center;
-            padding: 1.35rem 1.85rem;
-            border-radius: 1.15rem;
-            background: linear-gradient(145deg, rgba(127, 29, 29, 0.6), rgba(23, 31, 51, 0.96));
-            border: 2px solid rgba(220, 38, 38, 0.9);
-            box-shadow: 0 0 48px rgba(220, 38, 38, 0.32), 0 10px 36px rgba(0, 0, 0, 0.45);
-            max-width: 16rem;
-        }
-
-        .rmap-center::after {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            border-radius: inherit;
-            border: 1px solid rgba(255, 180, 171, 0.2);
-            pointer-events: none;
-        }
-
-        .rmap-center-formula {
-            display: inline-block;
-            margin-top: 0.65rem;
-            padding: 0.25rem 0.65rem;
-            border-radius: 9999px;
-            font-size: 0.68rem;
-            letter-spacing: 0.02em;
-            color: rgba(255, 180, 171, 0.95);
-            background: rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(220, 38, 38, 0.35);
+            padding: 1rem 1.35rem 0.95rem;
+            border-radius: 0.75rem;
+            background: linear-gradient(160deg, #7f1d1d 0%, #3b1219 55%, #171f33 100%);
+            border: 2px solid #dc2626;
+            box-shadow: 0 0 32px rgba(220, 38, 38, 0.32), 0 6px 24px rgba(0, 0, 0, 0.4);
+            min-width: 9.5rem;
+            max-width: 11rem;
         }
 
         .rmap-center-icon {
-            font-size: 2rem;
-            color: #ffb4ab;
+            font-size: 1.65rem;
+            color: #fecaca;
             margin-bottom: 0.35rem;
+            display: block;
+        }
+
+        .rmap-center-title {
+            font-family: 'EB Garamond', serif;
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: #fff;
+            line-height: 1.3;
         }
 
         .rmap-branch {
             position: absolute;
             z-index: 8;
             display: flex;
-            gap: 0.65rem;
+            gap: 0.62rem;
         }
 
-        .rmap-branch--tl { left: 0.5%; top: 1.5%; flex-direction: row-reverse; align-items: flex-start; max-width: 44%; }
-        .rmap-branch--tr { right: 0.5%; top: 1.5%; flex-direction: row; align-items: flex-start; max-width: 44%; }
-        .rmap-branch--br { right: 0.5%; bottom: 4%; flex-direction: row; align-items: flex-end; max-width: 44%; }
-        .rmap-branch--bl { left: 0.5%; bottom: 4%; flex-direction: row-reverse; align-items: flex-end; max-width: 44%; }
-        .rmap-branch--bc { left: 50%; bottom: 1%; transform: translateX(-50%); flex-direction: column; align-items: center; max-width: 36%; gap: 0.45rem; }
+        /* Kéo nhánh vào gần trung tâm hơn */
+        .rmap-branch--tl { left: 6%; top: 2.5%; flex-direction: row-reverse; align-items: center; max-width: 40%; }
+        .rmap-branch--tr { right: 6%; top: 2.5%; flex-direction: row; align-items: center; max-width: 40%; }
+        .rmap-branch--bl { left: 6%; bottom: 13.5%; flex-direction: row-reverse; align-items: center; max-width: 40%; }
+        .rmap-branch--br { right: 6%; bottom: 13.5%; flex-direction: row; align-items: center; max-width: 40%; }
+        .rmap-branch--bc { left: 50%; bottom: 11%; transform: translateX(-50%); flex-direction: column; align-items: center; max-width: 32%; gap: 0.38rem; }
 
         .rmap-hub {
             position: relative;
             z-index: 12;
             flex-shrink: 0;
-            align-self: center;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.55rem 1.1rem;
-            border-radius: 9999px;
+            gap: 0.4rem;
+            padding: 0.48rem 0.88rem;
+            border-radius: 0.5rem;
             font-family: 'EB Garamond', serif;
-            font-size: 0.95rem;
+            font-size: 0.82rem;
             font-weight: 600;
             color: #fff;
             white-space: nowrap;
-            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .rmap-hub:hover {
-            transform: scale(1.04);
-            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.32);
+            line-height: 1.2;
         }
 
         .rmap-hub-icon {
-            font-size: 1.05rem;
+            font-size: 0.92rem;
             opacity: 0.95;
+            flex-shrink: 0;
         }
 
-        .rmap-branch--tl .rmap-hub { background: linear-gradient(135deg, #0369a1, #0ea5e9); border: 1px solid #7dd3fc; }
-        .rmap-branch--tr .rmap-hub { background: linear-gradient(135deg, #047857, #10b981); border: 1px solid #6ee7b7; }
-        .rmap-branch--br .rmap-hub { background: linear-gradient(135deg, #6d28d9, #8b5cf6); border: 1px solid #c4b5fd; }
-        .rmap-branch--bl .rmap-hub { background: linear-gradient(135deg, #c2410c, #f97316); border: 1px solid #fdba74; }
+        .rmap-branch--tl .rmap-hub { background: linear-gradient(135deg, #0284c7, #0ea5e9); border: 1px solid #7dd3fc; }
+        .rmap-branch--tr .rmap-hub { background: linear-gradient(135deg, #059669, #10b981); border: 1px solid #6ee7b7; }
+        .rmap-branch--bl .rmap-hub { background: linear-gradient(135deg, #ea580c, #f97316); border: 1px solid #fdba74; }
+        .rmap-branch--br .rmap-hub { background: linear-gradient(135deg, #7c3aed, #8b5cf6); border: 1px solid #c4b5fd; }
         .rmap-branch--bc .rmap-hub { background: linear-gradient(135deg, #be123c, #f43f5e); border: 1px solid #fda4af; }
 
         .rmap-subs {
             display: flex;
             flex-direction: column;
-            gap: 0.35rem;
+            gap: 0.38rem;
             position: relative;
             z-index: 10;
-            justify-content: center;
         }
 
         .rmap-branch--tl .rmap-subs,
         .rmap-branch--bl .rmap-subs { align-items: flex-end; }
         .rmap-branch--tr .rmap-subs,
         .rmap-branch--br .rmap-subs { align-items: flex-start; }
-        .rmap-branch--bc .rmap-subs { align-items: center; margin-top: 0.15rem; }
+        .rmap-branch--bc .rmap-subs { align-items: center; gap: 0.34rem; }
 
         .rmap-sub {
             display: inline-block;
             position: relative;
             z-index: 10;
-            padding: 0.35rem 0.85rem;
+            padding: 0.34rem 0.68rem;
             border-radius: 9999px;
-            font-size: 0.72rem;
-            line-height: 1.35;
-            color: rgba(218, 226, 253, 0.95);
-            background: rgba(12, 18, 34, 0.92);
-            backdrop-filter: blur(8px);
-            transition: background 0.2s ease, border-color 0.2s ease;
+            font-size: 0.65rem;
+            line-height: 1.25;
+            color: rgba(240, 245, 255, 0.94);
+            background: rgba(10, 15, 28, 0.94);
+            white-space: nowrap;
+            letter-spacing: 0.01em;
         }
 
         .rmap-branch--tl .rmap-sub { border: 1px solid rgba(14, 165, 233, 0.5); }
         .rmap-branch--tr .rmap-sub { border: 1px solid rgba(16, 185, 129, 0.5); }
-        .rmap-branch--br .rmap-sub { border: 1px solid rgba(139, 92, 246, 0.5); }
         .rmap-branch--bl .rmap-sub { border: 1px solid rgba(249, 115, 22, 0.5); }
-        .rmap-branch--bc .rmap-sub { border: 1px solid rgba(244, 63, 94, 0.5); }
-
-        .rmap-sub:hover {
-            background: rgba(22, 32, 56, 0.96);
-        }
+        .rmap-branch--br .rmap-sub { border: 1px solid rgba(139, 92, 246, 0.5); }
+        .rmap-branch--bc .rmap-sub { border: 1px solid rgba(244, 63, 94, 0.5); font-size: 0.63rem; }
 
         .rmap-legend {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 0.75rem 1.25rem;
-            padding: 1rem 1.25rem;
-            border-radius: 0.75rem;
-            background: rgba(23, 31, 51, 0.65);
+            gap: 0.55rem 0.95rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.6rem;
+            background: rgba(18, 24, 40, 0.75);
             border: 1px solid rgba(218, 226, 253, 0.08);
         }
 
         .rmap-legend-item {
             display: flex;
             align-items: center;
-            gap: 0.45rem;
-            font-size: 0.7rem;
-            color: rgba(218, 226, 253, 0.65);
+            gap: 0.35rem;
+            font-size: 0.65rem;
+            color: rgba(218, 226, 253, 0.68);
         }
 
         .rmap-legend-dot {
-            width: 0.55rem;
-            height: 0.55rem;
+            width: 0.45rem;
+            height: 0.45rem;
             border-radius: 50%;
             flex-shrink: 0;
+        }
+
+        @media (min-width: 1024px) {
+            .rmap-board {
+                min-height: 700px;
+            }
+
+            .rmap-center-title { font-size: 0.98rem; }
+            .rmap-hub { font-size: 0.86rem; padding: 0.52rem 0.95rem; }
+            .rmap-sub { font-size: 0.68rem; }
+        }
+
+        @media (max-width: 1100px) and (min-width: 901px) {
+            .rmap-branch--tl { left: 4%; max-width: 42%; }
+            .rmap-branch--tr { right: 4%; max-width: 42%; }
+            .rmap-branch--bl { left: 4%; max-width: 42%; }
+            .rmap-branch--br { right: 4%; max-width: 42%; }
+            .rmap-hub { font-size: 0.78rem; }
+            .rmap-sub { font-size: 0.62rem; padding: 0.3rem 0.6rem; }
         }
 
         .rmap-mobile {
@@ -639,7 +642,7 @@
         customElements.define('webgl-shader', WebGLShaderElement);
     </script>
 </head>
-<body class="bg-background text-on-surface font-body-md antialiased selection:bg-marx-red/30 selection:text-white"><div class="fixed bottom-8 right-8 z-50 flex flex-col items-end gap-4"><div class="hidden w-80 md:w-96 h-[500px] glass-panel rounded-2xl overflow-hidden flex flex-col shadow-2xl border border-marx-red/30 animate-fade-up" id="ai-chat-window"><div class="bg-surface-container-high p-4 border-b border-outline/20 flex justify-between items-center"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-marx-red">smart_toy</span><span class="font-label-caps text-sm">Marxist Assistant</span></div><button class="material-symbols-outlined text-outline hover:text-white" onclick="document.getElementById('ai-chat-window').classList.add('hidden')">close</button></div><div class="flex-1 overflow-y-auto p-4 space-y-4 bg-surface/40" id="ai-chat-messages"><div class="bg-marx-red/10 border border-marx-red/20 p-3 rounded-xl rounded-tl-none text-sm">Chào bạn! Tôi tra cứu từ <strong>Báo cáo lý luận giá trị thặng dư Mác</strong> và <strong>Giáo trình KTCT Mác - Lênin</strong>. Hãy hỏi về giá trị thặng dư, tư bản, lao động...</div></div><div class="p-4 bg-surface-container"><div class="relative"><input class="w-full bg-surface-dim border border-outline/30 rounded-full py-2 pl-4 pr-10 text-sm focus:border-marx-red outline-none" id="ai-chat-input" placeholder="Hỏi về quy luật kinh tế..." type="text"/><button type="button" id="ai-chat-send" class="absolute right-2 top-1/2 -translate-y-1/2 material-symbols-outlined text-marx-red hover:text-white cursor-pointer" aria-label="Gửi">send</button></div></div></div><button class="w-16 h-16 bg-marx-red text-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform active:scale-95 group" onclick="document.getElementById('ai-chat-window').classList.toggle('hidden')"><span class="material-symbols-outlined text-3xl">chat</span><div class="absolute -top-2 -right-2 w-5 h-5 bg-marx-yellow rounded-full animate-pulse"></div></button></div>
+<body class="bg-background text-on-surface font-body-md antialiased selection:bg-marx-red/30 selection:text-white"><div class="fixed bottom-8 right-8 z-50 flex flex-col items-end gap-4"><div class="hidden w-80 md:w-96 h-[500px] glass-panel rounded-2xl overflow-hidden flex flex-col shadow-2xl border border-marx-red/30 animate-fade-up" id="ai-chat-window"><div class="bg-surface-container-high p-4 border-b border-outline/20 flex justify-between items-center"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-marx-red">smart_toy</span><span class="font-label-caps text-sm">Marxist Assistant</span></div><button class="material-symbols-outlined text-outline hover:text-white" onclick="document.getElementById('ai-chat-window').classList.add('hidden')">close</button></div><div class="flex-1 overflow-y-auto p-4 space-y-4 bg-surface/40" id="ai-chat-messages"><div class="bg-marx-red/10 border border-marx-red/20 p-3 rounded-xl rounded-tl-none text-sm">Xin chào! Tôi có thể giúp gì cho bạn?</div></div><div class="p-4 bg-surface-container"><div class="relative"><input class="w-full bg-surface-dim border border-outline/30 rounded-full py-2 pl-4 pr-10 text-sm focus:border-marx-red outline-none" id="ai-chat-input" placeholder="Hỏi về quy luật kinh tế..." type="text"/><button type="button" id="ai-chat-send" class="absolute right-2 top-1/2 -translate-y-1/2 material-symbols-outlined text-marx-red hover:text-white cursor-pointer" aria-label="Gửi">send</button></div></div></div><button class="w-16 h-16 bg-marx-red text-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform active:scale-95 group" onclick="document.getElementById('ai-chat-window').classList.toggle('hidden')"><span class="material-symbols-outlined text-3xl">chat</span><div class="absolute -top-2 -right-2 w-5 h-5 bg-marx-yellow rounded-full animate-pulse"></div></button></div>
 <!-- TopNavBar -->
 <nav class="fixed top-0 left-0 w-full z-50 bg-surface-container/80 backdrop-blur-xl border-b border-on-surface-variant/10 shadow-sm">
 <div class="flex justify-between items-center w-full px-margin-desktop h-16 max-w-container-max mx-auto">
@@ -682,6 +685,7 @@
 <!-- Section 2: Timeline -->
 <section class="py-xl relative animate-fade-up" id="nguon-goc">
 <div class="max-w-container-max mx-auto px-margin-desktop md:px-margin-desktop px-margin-mobile">
+<span class="section-anchor" aria-hidden="true"></span>
 <h2 class="font-headline-md text-headline-md text-center mb-6"><span class="text-marx-red">01.</span> Nguồn Gốc và Bản Chất Của Giá Trị Thặng Dư</h2>
 <p class="font-body-lg text-body-lg text-on-surface-variant max-w-3xl mx-auto text-center mb-16">
     Mâu thuẫn của công thức chung của tư bản: Tư bản vận động theo công thức T - H - T' (trong đó T' = T + t). Giá trị thặng dư (t) không thể sinh ra từ quá trình lưu thông (mua rẻ bán đắt chỉ là sự phân phối lại), cũng không thể sinh ra ở ngoài lưu thông. Bí mật nằm ở một loại hàng hóa đặc biệt: Hàng hóa sức lao động.
@@ -746,6 +750,7 @@
 <!-- Section 3: Cấu Trúc Tư Bản -->
 <section class="py-xl bg-surface-container-low/30 animate-scale-in" id="cau-truc">
 <div class="max-w-container-max mx-auto px-margin-desktop md:px-margin-desktop px-margin-mobile">
+<span class="section-anchor" aria-hidden="true"></span>
 <h2 class="font-headline-md text-headline-md mb-12"><span class="text-marx-red">02.</span> Cấu Trúc Tư Bản &amp; Thước Đo Bóc Lột</h2>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-lg relative mb-12">
 <!-- Decorative Mindmap connector -->
@@ -820,6 +825,7 @@
 <!-- Section 4: Simulator -->
 <section class="py-xl animate-rotate-in" id="mo-phong">
 <div class="max-w-container-max mx-auto px-margin-desktop md:px-margin-desktop px-margin-mobile">
+<span class="section-anchor" aria-hidden="true"></span>
 <h2 class="font-headline-md text-headline-md mb-4"><span class="text-marx-red">03.</span> Mô Phỏng Sản Xuất Giá Trị Thặng Dư</h2>
 <p class="text-on-surface-variant mb-8 max-w-2xl">Điều chỉnh các biến số để xem cấu tạo giá trị hàng hóa (W = c + v + m) và tỷ suất giá trị thặng dư (m') thay đổi như thế nào.</p>
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -886,6 +892,7 @@
 <!-- Section 5: Methods (AI Chatbox) -->
 <section class="py-xl bg-surface-container-low/30 animate-fade-left" id="phuong-phap">
 <div class="max-w-container-max mx-auto px-margin-desktop md:px-margin-desktop px-margin-mobile">
+<span class="section-anchor" aria-hidden="true"></span>
 <h2 class="font-headline-md text-headline-md mb-8"><span class="text-marx-red">04.</span> Phương Pháp Sản Xuất Giá Trị Thặng Dư</h2>
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
 <!-- Absolute -->
@@ -918,8 +925,9 @@
 <!-- Section 5: Sơ đồ Tư duy -->
 <section class="py-xl relative animate-scale-in" id="so-do-tu-duy">
 <div class="max-w-container-max mx-auto px-margin-desktop md:px-margin-desktop px-margin-mobile">
+<span class="section-anchor" aria-hidden="true"></span>
 <h2 class="font-headline-md text-headline-md mb-4 text-center"><span class="text-marx-red">05.</span> Sơ đồ Tư duy</h2>
-<p class="font-body-md text-body-md text-on-surface-variant rmap-subtitle">Tổng hợp lý luận giá trị thặng dư theo báo cáo nghiên cứu — <strong class="text-white">đường liền</strong> nối từ trung tâm vào khung chính, <strong class="text-white">đường đứt</strong> từ khung chính xuống các ý thành phần.</p>
+<p class="font-body-md text-body-md text-on-surface-variant rmap-subtitle">Sơ đồ tổng hợp lý luận giá trị thặng dư — <strong class="text-white">đường liền</strong> nối trung tâm → khung chính, <strong class="text-white">đường đứt</strong> nối khung chính → các ý thành phần.</p>
 
 <div class="rmap-wrap">
 <div class="rmap-board">
@@ -929,44 +937,31 @@
 
 <div class="rmap-center">
 <span class="material-symbols-outlined rmap-center-icon">account_balance</span>
-<h3 class="font-headline-sm text-white leading-snug">Lý luận Giá trị Thặng Dư</h3>
-<p class="text-marx-red font-label-caps text-lg mt-1">(m)</p>
-<p class="font-caption text-caption text-on-surface-variant mt-2">Hòn đá tảng học thuyết kinh tế Mác</p>
-<span class="rmap-center-formula">W = c + v + m</span>
+<p class="rmap-center-title">Lý luận<br>Giá trị thặng dư</p>
 </div>
 
 <div class="rmap-branch rmap-branch--tl">
-<div class="rmap-hub"><span class="material-symbols-outlined rmap-hub-icon">menu_book</span> Khái quát chung</div>
+<div class="rmap-hub"><span class="material-symbols-outlined rmap-hub-icon">menu_book</span> 1. Khái quát chung</div>
 <div class="rmap-subs">
 <span class="rmap-sub">Hòn đá tảng KT Mác</span>
 <span class="rmap-sub">Bối cảnh lịch sử KTCT</span>
-<span class="rmap-sub">Cơ sở triết học ĐCN</span>
+<span class="rmap-sub">Cơ sở triết học: ĐCN</span>
 <span class="rmap-sub">Ý nghĩa phương pháp luận</span>
 </div>
 </div>
 
 <div class="rmap-branch rmap-branch--tr">
-<div class="rmap-hub"><span class="material-symbols-outlined rmap-hub-icon">account_tree</span> Nguồn gốc sinh ra m</div>
+<div class="rmap-hub"><span class="material-symbols-outlined rmap-hub-icon">account_tree</span> 2. Nguồn gốc sinh ra m</div>
 <div class="rmap-subs">
-<span class="rmap-sub">Chu trình T → H → T'</span>
+<span class="rmap-sub">Chu trình: T - H - ... - T'</span>
 <span class="rmap-sub">Hàng hóa sức lao động</span>
 <span class="rmap-sub">LĐ cụ thể &amp; trừu tượng</span>
 <span class="rmap-sub">Mâu thuẫn công thức chung</span>
 </div>
 </div>
 
-<div class="rmap-branch rmap-branch--br">
-<div class="rmap-hub"><span class="material-symbols-outlined rmap-hub-icon">trending_up</span> Phương pháp gia tăng m</div>
-<div class="rmap-subs">
-<span class="rmap-sub">Thặng dư tuyệt đối</span>
-<span class="rmap-sub">Thặng dư tương đối</span>
-<span class="rmap-sub">Thặng dư siêu ngạch</span>
-<span class="rmap-sub">Che đậy: p, z, R</span>
-</div>
-</div>
-
 <div class="rmap-branch rmap-branch--bl">
-<div class="rmap-hub"><span class="material-symbols-outlined rmap-hub-icon">public</span> Vận dụng thực tiễn</div>
+<div class="rmap-hub"><span class="material-symbols-outlined rmap-hub-icon">visibility</span> 3. Vận dụng thực tiễn</div>
 <div class="rmap-subs">
 <span class="rmap-sub">KT thị trường ĐH XHCN</span>
 <span class="rmap-sub">Cách mạng 4.0</span>
@@ -976,7 +971,7 @@
 </div>
 
 <div class="rmap-branch rmap-branch--bc">
-<div class="rmap-hub"><span class="material-symbols-outlined rmap-hub-icon">schema</span> Bản chất &amp; cấu trúc</div>
+<div class="rmap-hub"><span class="material-symbols-outlined rmap-hub-icon">calculate</span> 4. Bản chất &amp; cấu trúc</div>
 <div class="rmap-subs">
 <span class="rmap-sub">Quan hệ bóc lột</span>
 <span class="rmap-sub">W = c + v + m</span>
@@ -985,46 +980,55 @@
 </div>
 </div>
 
+<div class="rmap-branch rmap-branch--br">
+<div class="rmap-hub"><span class="material-symbols-outlined rmap-hub-icon">trending_up</span> 5. Phương pháp gia tăng m</div>
+<div class="rmap-subs">
+<span class="rmap-sub">Thặng dư tuyệt đối</span>
+<span class="rmap-sub">Thặng dư tương đối</span>
+<span class="rmap-sub">Thặng dư siêu ngạch</span>
+<span class="rmap-sub">Che đậy: p, z, R</span>
+</div>
+</div>
+
 <svg class="rmap-svg rmap-svg--front" viewBox="0 0 1000 700" preserveAspectRatio="none" aria-hidden="true">
+<g id="rmap-links-spine"></g>
 <g id="rmap-links-sub"></g>
 </svg>
 </div>
 
 <div class="rmap-legend">
-<span class="rmap-legend-item"><span class="rmap-legend-dot bg-[#dc2626]"></span> Chủ đề trung tâm</span>
+<span class="rmap-legend-item"><span class="rmap-legend-dot bg-rose-500"></span> Bản chất &amp; cấu trúc</span>
 <span class="rmap-legend-item"><span class="rmap-legend-dot bg-sky-400"></span> Khái quát chung</span>
-<span class="rmap-legend-item"><span class="rmap-legend-dot bg-emerald-400"></span> Nguồn gốc</span>
-<span class="rmap-legend-item"><span class="rmap-legend-dot bg-violet-400"></span> Phương pháp</span>
-<span class="rmap-legend-item"><span class="rmap-legend-dot bg-orange-400"></span> Thực tiễn</span>
-<span class="rmap-legend-item"><span class="rmap-legend-dot bg-rose-400"></span> Bản chất &amp; cấu trúc</span>
+<span class="rmap-legend-item"><span class="rmap-legend-dot bg-emerald-400"></span> Nguồn gốc sinh ra m</span>
+<span class="rmap-legend-item"><span class="rmap-legend-dot bg-violet-400"></span> Phương pháp gia tăng m</span>
+<span class="rmap-legend-item"><span class="rmap-legend-dot bg-orange-400"></span> Vận dụng thực tiễn</span>
 </div>
 
 <!-- Mobile fallback -->
 <div class="rmap-mobile">
 <div class="rmap-mobile-card rmap-mobile-card--center">
 <span class="material-symbols-outlined text-marx-red text-3xl mb-2">account_balance</span>
-<h3 class="font-headline-sm text-white">Lý luận Giá trị Thặng Dư (m)</h3>
-<p class="text-xs text-on-surface-variant mt-1">Hòn đá tảng học thuyết kinh tế Mác</p>
+<h3 class="font-headline-sm text-white">Lý luận Giá trị thặng dư</h3>
 </div>
 <div class="rmap-mobile-card" style="border-top: 3px solid #0ea5e9">
-<p class="rmap-mobile-hub text-sky-400">Khái quát chung</p>
-<div class="rmap-mobile-subs"><span>Hòn đá tảng KT Mác</span><span>Bối cảnh lịch sử</span><span>Cơ sở triết học ĐCN</span><span>Ý nghĩa PPL</span></div>
+<p class="rmap-mobile-hub text-sky-400">1. Khái quát chung</p>
+<div class="rmap-mobile-subs"><span>Hòn đá tảng KT Mác</span><span>Bối cảnh lịch sử KTCT</span><span>Cơ sở triết học: ĐCN</span><span>Ý nghĩa PPL</span></div>
 </div>
 <div class="rmap-mobile-card" style="border-top: 3px solid #10b981">
-<p class="rmap-mobile-hub text-emerald-400">Nguồn gốc sinh ra m</p>
-<div class="rmap-mobile-subs"><span>T → H → T'</span><span>Sức lao động</span><span>LĐ hai mặt</span><span>Mâu thuẫn công thức</span></div>
+<p class="rmap-mobile-hub text-emerald-400">2. Nguồn gốc sinh ra m</p>
+<div class="rmap-mobile-subs"><span>Chu trình T-H-T'</span><span>Sức lao động</span><span>LĐ hai mặt</span><span>Mâu thuẫn công thức</span></div>
+</div>
+<div class="rmap-mobile-card" style="border-top: 3px solid #f97316">
+<p class="rmap-mobile-hub text-orange-400">3. Vận dụng thực tiễn</p>
+<div class="rmap-mobile-subs"><span>KT ĐH XHCN</span><span>CM 4.0</span><span>Nhà nước điều tiết</span><span>Bảo vệ LĐ</span></div>
 </div>
 <div class="rmap-mobile-card" style="border-top: 3px solid #f43f5e">
-<p class="rmap-mobile-hub text-rose-400">Bản chất &amp; cấu trúc</p>
+<p class="rmap-mobile-hub text-rose-400">4. Bản chất &amp; cấu trúc</p>
 <div class="rmap-mobile-subs"><span>Quan hệ bóc lột</span><span>W = c + v + m</span><span>c &amp; v</span><span>m' và M</span></div>
 </div>
 <div class="rmap-mobile-card" style="border-top: 3px solid #8b5cf6">
-<p class="rmap-mobile-hub text-violet-400">Phương pháp gia tăng m</p>
+<p class="rmap-mobile-hub text-violet-400">5. Phương pháp gia tăng m</p>
 <div class="rmap-mobile-subs"><span>Tuyệt đối</span><span>Tương đối</span><span>Siêu ngạch</span><span>p, z, R</span></div>
-</div>
-<div class="rmap-mobile-card" style="border-top: 3px solid #f97316">
-<p class="rmap-mobile-hub text-orange-400">Vận dụng thực tiễn</p>
-<div class="rmap-mobile-subs"><span>KT ĐH XHCN</span><span>CM 4.0</span><span>Nhà nước điều tiết</span><span>Bảo vệ LĐ</span></div>
 </div>
 </div>
 </div>
@@ -1034,6 +1038,7 @@
 <!-- Section 6: Thực Tiễn & Kết Luận -->
 <section class="py-xl relative animate-fade-up" id="thuc-tien">
 <div class="max-w-container-max mx-auto px-margin-desktop md:px-margin-desktop px-margin-mobile">
+<span class="section-anchor" aria-hidden="true"></span>
 <h2 class="font-headline-md text-headline-md mb-8 text-center"><span class="text-marx-red">06.</span> Ý Nghĩa Thực Tiễn &amp; Kết Luận</h2>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
 <!-- 4.0 Context -->
@@ -1297,6 +1302,10 @@
         updateSimulator();
 
         // --- Nav Scrollspy ---
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+
         const navSections = [
             { id: 'mo-dau' },
             { id: 'nguon-goc' },
@@ -1308,11 +1317,22 @@
         ];
         const navLinks = document.querySelectorAll('.nav-link');
         const navBar = document.querySelector('nav');
-        const getNavOffset = () => (navBar ? navBar.offsetHeight : 64) + 16;
+        const NAV_GAP = 48;
+
+        function syncNavOffset() {
+            const height = navBar ? Math.max(64, Math.ceil(navBar.getBoundingClientRect().height)) : 64;
+            const offset = height + NAV_GAP;
+            document.documentElement.style.setProperty('--nav-offset', `${offset}px`);
+            return offset;
+        }
+
+        const getNavOffset = () => syncNavOffset();
         let navClickLock = null;
 
         function getSectionMarker(sectionEl) {
-            return sectionEl.querySelector('h2') || sectionEl;
+            return sectionEl.querySelector('.section-anchor')
+                || sectionEl.querySelector('h2')
+                || sectionEl;
         }
 
         function getSectionScrollTop(sectionEl) {
@@ -1324,8 +1344,18 @@
             const target = document.getElementById(sectionId);
             if (!target) return;
 
-            const top = getSectionScrollTop(target);
-            window.scrollTo({ top, behavior: smooth ? 'smooth' : 'auto' });
+            target.classList.add('is-visible');
+
+            const runScroll = (behavior) => {
+                const top = Math.max(0, getSectionScrollTop(target));
+                window.scrollTo({ top, behavior });
+            };
+
+            runScroll(smooth ? 'smooth' : 'auto');
+            requestAnimationFrame(() => runScroll('auto'));
+            setTimeout(() => runScroll('auto'), smooth ? 400 : 50);
+            setTimeout(() => runScroll('auto'), smooth ? 900 : 100);
+
             history.replaceState(null, '', `#${sectionId}`);
 
             if (navSections.some(s => s.id === sectionId)) {
@@ -1335,12 +1365,23 @@
                     setTimeout(() => {
                         navClickLock = null;
                         updateActiveNav();
-                    }, 700);
+                    }, 950);
                 } else {
                     navClickLock = null;
                 }
             }
         }
+
+        syncNavOffset();
+        window.addEventListener('resize', syncNavOffset);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            syncNavOffset();
+            const hash = window.location.hash.slice(1);
+            if (hash && document.getElementById(hash)) {
+                scrollToSection(hash, false);
+            }
+        });
 
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
@@ -1385,7 +1426,7 @@
                 const el = document.getElementById(id);
                 if (!el) continue;
                 const marker = getSectionMarker(el);
-                const top = marker.getBoundingClientRect().top + window.scrollY;
+                const top = marker.getBoundingClientRect().top + window.pageYOffset;
                 if (scrollPos >= top) {
                     currentId = id;
                     break;
@@ -1480,6 +1521,7 @@
         window.addEventListener('scroll', onScroll, { passive: true });
         window.addEventListener('resize', onScroll);
         window.addEventListener('load', () => {
+            syncNavOffset();
             const hash = window.location.hash.slice(1);
             if (hash && document.getElementById(hash)) {
                 scrollToSection(hash, false);
@@ -1488,12 +1530,12 @@
         });
         onScroll();
 
-        // --- Radial mind map connectors (center → hub → subs) ---
+        // --- Radial mind map connectors ---
         const RMAP_COLORS = {
             'rmap-branch--tl': '#0ea5e9',
             'rmap-branch--tr': '#10b981',
-            'rmap-branch--br': '#8b5cf6',
             'rmap-branch--bl': '#f97316',
+            'rmap-branch--br': '#8b5cf6',
             'rmap-branch--bc': '#f43f5e'
         };
         const RMAP_VB = { w: 1000, h: 700 };
@@ -1519,44 +1561,54 @@
             return { x: cx + dx * s, y: cy + dy * s };
         }
 
-        function rmapHubToSubPath(hubRect, subRect, boardRect, board, isVertical) {
-            const hubCx = hubRect.left - boardRect.left + hubRect.width / 2;
-            const hubCy = hubRect.top - boardRect.top + hubRect.height / 2;
-            const subCx = subRect.left - boardRect.left + subRect.width / 2;
-            const subCy = subRect.top - boardRect.top + subRect.height / 2;
+        function rmapSidePoint(rect, boardRect, side) {
+            const x = rect.left - boardRect.left;
+            const y = rect.top - boardRect.top;
+            const w = rect.width;
+            const h = rect.height;
+            if (side === 'left') return { x, y: y + h / 2 };
+            if (side === 'right') return { x: x + w, y: y + h / 2 };
+            if (side === 'top') return { x: x + w / 2, y };
+            return { x: x + w / 2, y: y + h };
+        }
 
-            const from = rmapEdgePoint(hubRect, boardRect, subCx, subCy);
-            const to = rmapEdgePoint(subRect, boardRect, hubCx, hubCy);
-            const s = (p) => rmapScale(p, board);
+        function rmapMainCurve(from, to, board) {
+            const sf = rmapScale(from, board);
+            const st = rmapScale(to, board);
+            const cx = (from.x + to.x) / 2;
+            const cy = (from.y + to.y) / 2;
+            const sc = rmapScale({ x: cx, y: cy }, board);
+            return `M ${sf.x} ${sf.y} Q ${sc.x} ${sc.y} ${st.x} ${st.y}`;
+        }
 
+        function rmapSubCurve(from, to, board, horizontal) {
+            const sf = rmapScale(from, board);
+            const st = rmapScale(to, board);
             let c1, c2;
-            if (isVertical) {
-                const midY = (from.y + to.y) / 2;
-                c1 = { x: from.x, y: midY };
-                c2 = { x: to.x, y: midY };
-            } else {
+            if (horizontal) {
                 const midX = (from.x + to.x) / 2;
-                c1 = { x: midX, y: from.y };
-                c2 = { x: midX, y: to.y };
+                c1 = rmapScale({ x: midX, y: from.y }, board);
+                c2 = rmapScale({ x: midX, y: to.y }, board);
+            } else {
+                const midY = (from.y + to.y) / 2;
+                c1 = rmapScale({ x: from.x, y: midY }, board);
+                c2 = rmapScale({ x: to.x, y: midY }, board);
             }
-
-            const sf = s(from);
-            const sc1 = s(c1);
-            const sc2 = s(c2);
-            const st = s(to);
-            return `M ${sf.x} ${sf.y} C ${sc1.x} ${sc1.y}, ${sc2.x} ${sc2.y}, ${st.x} ${st.y}`;
+            return `M ${sf.x} ${sf.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${st.x} ${st.y}`;
         }
 
         function drawRmapConnectors() {
             const board = document.querySelector('.rmap-board');
             const mainG = document.getElementById('rmap-links-main');
             const subG = document.getElementById('rmap-links-sub');
+            const spineG = document.getElementById('rmap-links-spine');
             const center = document.querySelector('.rmap-center');
-            if (!board || !mainG || !subG || !center || board.clientWidth < 100) return;
+            if (!board || !mainG || !subG || !spineG || !center || board.clientWidth < 100) return;
             if (getComputedStyle(board).display === 'none') return;
 
             mainG.innerHTML = '';
             subG.innerHTML = '';
+            spineG.innerHTML = '';
             const boardRect = board.getBoundingClientRect();
             const centerRect = center.getBoundingClientRect();
             const centerCx = centerRect.left - boardRect.left + centerRect.width / 2;
@@ -1566,35 +1618,72 @@
                 const colorKey = Object.keys(RMAP_COLORS).find(cls => branch.classList.contains(cls));
                 const color = RMAP_COLORS[colorKey] || '#94a3b8';
                 const hub = branch.querySelector('.rmap-hub');
-                const subs = branch.querySelectorAll('.rmap-sub');
+                const subs = [...branch.querySelectorAll('.rmap-sub')];
                 if (!hub) return;
 
                 const hubRect = hub.getBoundingClientRect();
                 const hubCx = hubRect.left - boardRect.left + hubRect.width / 2;
                 const hubCy = hubRect.top - boardRect.top + hubRect.height / 2;
+                const isBc = branch.classList.contains('rmap-branch--bc');
+                const subsLeft = branch.classList.contains('rmap-branch--tl') || branch.classList.contains('rmap-branch--bl');
 
-                const mainFrom = rmapEdgePoint(centerRect, boardRect, hubCx, hubCy);
-                const mainTo = rmapEdgePoint(hubRect, boardRect, centerCx, centerCy);
-                const mainScaled = rmapScale(mainFrom, board);
-                const mainScaledTo = rmapScale(mainTo, board);
-                const mx = (mainScaled.x + mainScaledTo.x) / 2;
-                const my = (mainScaled.y + mainScaledTo.y) / 2;
+                let mainFrom, mainTo;
+                if (isBc) {
+                    mainFrom = rmapSidePoint(centerRect, boardRect, 'bottom');
+                    mainTo = rmapSidePoint(hubRect, boardRect, 'top');
+                } else {
+                    mainFrom = rmapEdgePoint(centerRect, boardRect, hubCx, hubCy);
+                    mainTo = rmapEdgePoint(hubRect, boardRect, centerCx, centerCy);
+                }
 
                 const mainPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
                 mainPath.setAttribute('class', 'link-main');
                 mainPath.setAttribute('stroke', color);
-                mainPath.setAttribute('d', `M ${mainScaled.x} ${mainScaled.y} Q ${mx} ${my} ${mainScaledTo.x} ${mainScaledTo.y}`);
+                if (isBc) {
+                    const sf = rmapScale(mainFrom, board);
+                    const st = rmapScale(mainTo, board);
+                    mainPath.setAttribute('d', `M ${sf.x} ${sf.y} L ${st.x} ${st.y}`);
+                } else {
+                    mainPath.setAttribute('d', rmapMainCurve(mainFrom, mainTo, board));
+                }
                 mainG.appendChild(mainPath);
 
-                const isVertical = branch.classList.contains('rmap-branch--bc');
-                subs.forEach(sub => {
-                    const subRect = sub.getBoundingClientRect();
-                    const subPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                    subPath.setAttribute('class', 'link-sub');
-                    subPath.setAttribute('stroke', color);
-                    subPath.setAttribute('d', rmapHubToSubPath(hubRect, subRect, boardRect, board, isVertical));
-                    subG.appendChild(subPath);
-                });
+                if (isBc && subs.length) {
+                    const hubBottom = rmapSidePoint(hubRect, boardRect, 'bottom');
+                    const lastSub = subs[subs.length - 1].getBoundingClientRect();
+                    const spineEnd = rmapSidePoint(lastSub, boardRect, 'bottom');
+                    const spine = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    spine.setAttribute('class', 'link-spine');
+                    spine.setAttribute('stroke', color);
+                    const sb = rmapScale(hubBottom, board);
+                    const se = rmapScale(spineEnd, board);
+                    spine.setAttribute('d', `M ${sb.x} ${sb.y} L ${se.x} ${se.y}`);
+                    spineG.appendChild(spine);
+
+                    subs.forEach((sub, i) => {
+                        const subRect = sub.getBoundingClientRect();
+                        const from = i === 0
+                            ? hubBottom
+                            : rmapSidePoint(subs[i - 1].getBoundingClientRect(), boardRect, 'bottom');
+                        const to = rmapSidePoint(subRect, boardRect, 'top');
+                        const subPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                        subPath.setAttribute('class', 'link-sub');
+                        subPath.setAttribute('stroke', color);
+                        subPath.setAttribute('d', rmapSubCurve(from, to, board, false));
+                        subG.appendChild(subPath);
+                    });
+                } else {
+                    subs.forEach(sub => {
+                        const subRect = sub.getBoundingClientRect();
+                        const from = rmapSidePoint(hubRect, boardRect, subsLeft ? 'left' : 'right');
+                        const to = rmapSidePoint(subRect, boardRect, subsLeft ? 'right' : 'left');
+                        const subPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                        subPath.setAttribute('class', 'link-sub');
+                        subPath.setAttribute('stroke', color);
+                        subPath.setAttribute('d', rmapSubCurve(from, to, board, true));
+                        subG.appendChild(subPath);
+                    });
+                }
             });
         }
 
