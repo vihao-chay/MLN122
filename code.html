@@ -373,7 +373,7 @@
         customElements.define('webgl-shader', WebGLShaderElement);
     </script>
 </head>
-<body class="bg-background text-on-surface font-body-md antialiased selection:bg-marx-red/30 selection:text-white"><div class="fixed bottom-8 right-8 z-50 flex flex-col items-end gap-4"><div class="hidden w-80 md:w-96 h-[500px] glass-panel rounded-2xl overflow-hidden flex flex-col shadow-2xl border border-marx-red/30 animate-fade-up" id="ai-chat-window"><div class="bg-surface-container-high p-4 border-b border-outline/20 flex justify-between items-center"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-marx-red">smart_toy</span><span class="font-label-caps text-sm">Marxist Assistant</span></div><button class="material-symbols-outlined text-outline hover:text-white" onclick="document.getElementById('ai-chat-window').classList.add('hidden')">close</button></div><div class="flex-1 overflow-y-auto p-4 space-y-4 bg-surface/40"><div class="bg-marx-red/10 border border-marx-red/20 p-3 rounded-xl rounded-tl-none text-sm">Chào bạn! Tôi là trợ lý ảo về học thuyết Mác. Bạn cần tìm hiểu thêm về Giá trị thặng dư không?</div></div><div class="p-4 bg-surface-container"><div class="relative"><input class="w-full bg-surface-dim border border-outline/30 rounded-full py-2 px-4 text-sm focus:border-marx-red outline-none" placeholder="Hỏi về quy luật kinh tế..." type="text"/><button class="absolute right-2 top-1/2 -translate-y-1/2 material-symbols-outlined text-marx-red">send</button></div></div></div><button class="w-16 h-16 bg-marx-red text-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform active:scale-95 group" onclick="document.getElementById('ai-chat-window').classList.toggle('hidden')"><span class="material-symbols-outlined text-3xl">chat</span><div class="absolute -top-2 -right-2 w-5 h-5 bg-marx-yellow rounded-full animate-pulse"></div></button></div>
+<body class="bg-background text-on-surface font-body-md antialiased selection:bg-marx-red/30 selection:text-white"><div class="fixed bottom-8 right-8 z-50 flex flex-col items-end gap-4"><div class="hidden w-80 md:w-96 h-[500px] glass-panel rounded-2xl overflow-hidden flex flex-col shadow-2xl border border-marx-red/30 animate-fade-up" id="ai-chat-window"><div class="bg-surface-container-high p-4 border-b border-outline/20 flex justify-between items-center"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-marx-red">smart_toy</span><span class="font-label-caps text-sm">Marxist Assistant</span></div><button class="material-symbols-outlined text-outline hover:text-white" onclick="document.getElementById('ai-chat-window').classList.add('hidden')">close</button></div><div class="flex-1 overflow-y-auto p-4 space-y-4 bg-surface/40" id="ai-chat-messages"><div class="bg-marx-red/10 border border-marx-red/20 p-3 rounded-xl rounded-tl-none text-sm">Chào bạn! Tôi là trợ lý ảo về học thuyết Mác. Bạn cần tìm hiểu thêm về Giá trị thặng dư không?</div></div><div class="p-4 bg-surface-container"><div class="relative"><input class="w-full bg-surface-dim border border-outline/30 rounded-full py-2 pl-4 pr-10 text-sm focus:border-marx-red outline-none" id="ai-chat-input" placeholder="Hỏi về quy luật kinh tế..." type="text"/><button type="button" id="ai-chat-send" class="absolute right-2 top-1/2 -translate-y-1/2 material-symbols-outlined text-marx-red hover:text-white cursor-pointer" aria-label="Gửi">send</button></div></div></div><button class="w-16 h-16 bg-marx-red text-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform active:scale-95 group" onclick="document.getElementById('ai-chat-window').classList.toggle('hidden')"><span class="material-symbols-outlined text-3xl">chat</span><div class="absolute -top-2 -right-2 w-5 h-5 bg-marx-yellow rounded-full animate-pulse"></div></button></div>
 <!-- TopNavBar -->
 <nav class="fixed top-0 left-0 w-full z-50 bg-surface-container/80 backdrop-blur-xl border-b border-on-surface-variant/10 shadow-sm">
 <div class="flex justify-between items-center w-full px-margin-desktop h-16 max-w-container-max mx-auto">
@@ -698,6 +698,116 @@
 <script>
     // --- Simulator Logic ---
     document.addEventListener('DOMContentLoaded', () => {
+        // --- Marxist Assistant Chat ---
+        const chatMessages = document.getElementById('ai-chat-messages');
+        const chatInput = document.getElementById('ai-chat-input');
+        const chatSend = document.getElementById('ai-chat-send');
+
+        const chatKnowledge = [
+            {
+                keywords: ['tuong doi', 'tương đối'],
+                answer: 'Giá trị thặng dư tương đối được tạo ra do rút ngắn thời gian lao động tất yếu, nhờ nâng cao năng suất lao động xã hội, từ đó kéo dài thời gian lao động thặng dư trong khi độ dài ngày lao động không đổi.'
+            },
+            {
+                keywords: ['tuyet doi', 'tuyệt đối'],
+                answer: 'Giá trị thặng dư tuyệt đối được tạo ra bằng cách kéo dài ngày lao động vượt quá thời gian lao động tất yếu, trong điều kiện năng suất lao động và giá trị sức lao động không thay đổi. Ví dụ: tăng ca từ 8 lên 10 tiếng.'
+            },
+            {
+                keywords: ['sieu ngach', 'siêu ngạch'],
+                answer: 'Giá trị thặng dư siêu ngạch là phần thặng dư thu được khi áp dụng công nghệ mới, làm giá trị cá biệt của hàng hóa thấp hơn giá trị thị trường. Đây là động lực mạnh thúc đẩy nhà tư bản cải tiến kỹ thuật.'
+            },
+            {
+                keywords: ['t-h-t', 'chu trinh', 'chu trình', "t'"],
+                answer: 'Tư bản vận động theo công thức T - H - T\' (T\' = T + m). Giá trị thặng dư không sinh ra từ lưu thông thuần túy mà từ quá trình sản xuất, nhờ hàng hóa đặc biệt là sức lao động.'
+            },
+            {
+                keywords: ['suc lao dong', 'sức lao động'],
+                answer: 'Sức lao động là hàng hóa đặc biệt: có giá trị (chi phí tái sản xuất) và giá trị sử dụng. Trong quá trình lao động, nó tạo ra giá trị mới lớn hơn giá trị của chính nó — đó là cơ sở sinh ra giá trị thặng dư.'
+            },
+            {
+                keywords: ['bat bien', 'bất biến', 'tu ban c'],
+                answer: 'Tư bản bất biến (c) là tư liệu sản xuất (máy móc, nguyên liệu...). Giá trị được bảo tồn và chuyển nguyên vẹn vào sản phẩm, không tạo ra giá trị mới — chỉ là điều kiện vật chất để tạo thặng dư.'
+            },
+            {
+                keywords: ['kha bien', 'khả biến', 'tu ban v', 'tien luong', 'tiền lương'],
+                answer: 'Tư bản khả biến (v) dùng mua sức lao động (trả lương). Trong sản xuất, công nhân tái tạo giá trị sức lao động (v) và tạo thêm phần dôi ra — giá trị thặng dư (m). Đây là nguồn gốc của m.'
+            },
+            {
+                keywords: ["m'", 'ty suat', 'tỷ suất'],
+                answer: 'Tỷ suất giá trị thặng dư m\' = (m / v) × 100%. Phản ánh trình độ bóc lột của tư bản. Có thể tính bằng thời gian: m\' = (LĐ thặng dư / LĐ tất yếu) × 100%.'
+            },
+            {
+                keywords: ['khoi luong', 'khối lượng'],
+                answer: 'Khối lượng giá trị thặng dư M = m\' × V (V là tổng tư bản khả biến). Phản ánh quy mô tuyệt đối của giá trị thặng dư mà nhà tư bản thu được.'
+            },
+            {
+                keywords: ['c + v + m', 'cau tao', 'cấu tạo'],
+                answer: 'Giá trị hàng hóa W = c + v + m: c là lao động quá khứ, v là lao động tất yếu, m là lao động thặng dư bị chiếm đoạt. Cấu tạo hữu cơ tư bản c/v cho thấy mức độ sử dụng máy móc.'
+            },
+            {
+                keywords: ['loi nhuan', 'lợi nhuận', 'loi tuc', 'lợi tức', 'dia to', 'địa tô'],
+                answer: 'Trên bề mặt thị trường, thặng dư bị che đậy: Lợi nhuận (p), Lợi tức (z), Địa tô (R) — làm mờ nguồn gốc thực sự từ sức lao động.'
+            },
+            {
+                keywords: ['lao dong truu tuong', 'lao động trừu tượng'],
+                answer: 'Lao động sản xuất hàng hóa có tính hai mặt: lao động cụ thể tạo giá trị sử dụng, lao động trừu tượng tạo giá trị. Đây là cơ sở phân tích quá trình làm tăng giá trị trong sản xuất tư bản.'
+            },
+            {
+                keywords: ['viet nam', 'việt nam', 'thuc tien', 'thực tiễn', '4.0'],
+                answer: 'Tại Việt Nam: khuyến khích KT tư nhân, Nhà nước điều tiết chống bóc lột quá mức, hướng tới phân phối hài hòa. CM 4.0 làm tăng c/v, bóc lột chuyển sang chất xám và dữ liệu.'
+            },
+            {
+                keywords: ['gia tri thang du', 'giá trị thặng dư', 'thang du', 'thặng dư'],
+                answer: 'Giá trị thặng dư (m) là phần giá trị mới do công nhân tạo ra vượt quá giá trị sức lao động, bị nhà tư bản chiếm không. Đây là "hòn đá tảng" trong học thuyết kinh tế Mác.'
+            }
+        ];
+
+        function normalizeText(text) {
+            return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        }
+
+        function getChatReply(question) {
+            const normalized = normalizeText(question);
+            for (const item of chatKnowledge) {
+                if (item.keywords.some(kw => normalized.includes(normalizeText(kw)))) {
+                    return item.answer;
+                }
+            }
+            return 'Tôi chưa rõ câu hỏi này. Bạn thử hỏi về: giá trị thặng dư, T-H-T\', sức lao động, tư bản c/v, m\', thặng dư tuyệt đối/tương đối/siêu ngạch, hoặc vận dụng tại Việt Nam.';
+        }
+
+        function appendChatMessage(text, role) {
+            const bubble = document.createElement('div');
+            bubble.className = role === 'user'
+                ? 'bg-surface-container-high border border-outline/30 p-3 rounded-xl rounded-tr-none text-sm ml-8 text-right'
+                : 'bg-marx-red/10 border border-marx-red/20 p-3 rounded-xl rounded-tl-none text-sm';
+            bubble.textContent = text;
+            chatMessages.appendChild(bubble);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function sendChatMessage() {
+            const question = chatInput.value.trim();
+            if (!question) return;
+
+            appendChatMessage(question, 'user');
+            chatInput.value = '';
+
+            window.setTimeout(() => {
+                appendChatMessage(getChatReply(question), 'bot');
+            }, 350);
+        }
+
+        if (chatSend && chatInput && chatMessages) {
+            chatSend.addEventListener('click', sendChatMessage);
+            chatInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    sendChatMessage();
+                }
+            });
+        }
+
         const inC = document.getElementById('input-c');
         const inV = document.getElementById('input-v');
         const inM = document.getElementById('input-m');
