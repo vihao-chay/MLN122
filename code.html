@@ -1470,19 +1470,14 @@
     <script>
         // --- Simulator Logic ---
         document.addEventListener('DOMContentLoaded', () => {
-            // --- Gemini PDF Assistant (RAG over 2 PDF knowledge base) ---
+            // --- Gemini Assistant (RAG over internal knowledge base) ---
             const chatMessages = document.getElementById('ai-chat-messages');
             const chatInput = document.getElementById('ai-chat-input');
             const chatSend = document.getElementById('ai-chat-send');
             let pdfChunks = [];
             let knowledgeReady = false;
 
-            const GEMINI_MODEL = 'gemini-2.0-flash';
-            //APIkey
-            const GEMINI_API_KEY_DAN_VAO_DAY = 'AQ.Ab8RN6JRQ_CUNSCniDQ94fFk_jpOM4voAa4HeuD5n6Ld62A7qQAQ.Ab8RN6K3E0DDUBrQXRsAoBOAG4uclyFlbnQH5F9vPP7Y7TNIdQ';
-
-            const GEMINI_ENDPOINT = (apiKey) =>
-                `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(apiKey)}`;
+            const CHAT_API_ENDPOINT = '/api/chat';
 
             function normalizeText(text) {
                 return (text || '').toLowerCase()
@@ -1558,57 +1553,19 @@
                 return (lastStop > maxLen * 0.55 ? cut.slice(0, lastStop + 1) : cut.trim()) + '...';
             }
 
-            function buildPrompt(question, contexts) {
-                const contextText = contexts.map((c, i) =>
-                    `[Đoạn tham khảo ${i + 1}]
-${trimText(c.text.replace(/\[Trang\s*\d+\]/gi, ''), 1100)}`
-                ).join('\n\n');
-
-                return `Mình là trợ lý học tập môn Kinh tế chính trị Mác - Lênin cho sinh viên.
-
-CÁCH TRẢ LỜI:
-- Trả lời tự nhiên như trợ giảng, thân thiện và dễ hiểu.
-- Không nhắc tên file PDF, không nhắc trang, không nói “theo tài liệu”, “trong dữ liệu”, “nguồn”.
-- Không trích nguyên văn dài; hãy tự diễn giải lại ý chính.
-- Nếu hỏi khái niệm: nêu khái niệm ngắn + giải thích + ví dụ đơn giản.
-- Nếu hỏi so sánh: trình bày gọn bằng các ý hoặc bảng.
-- Nếu hỏi câu tư duy/vận dụng: phân tích logic từng bước rồi chốt kết luận.
-- Nếu dữ liệu chưa đủ rõ, hãy nói nhẹ nhàng rằng mình chưa thấy đủ căn cứ trong tài liệu hiện có.
-- Câu trả lời nên vừa đủ, không quá dài, ưu tiên 3-6 ý chính.
-
-CÂU HỎI CỦA NGƯỜI DÙNG:
-${question}
-
-NỘI DUNG THAM KHẢO NỘI BỘ:
-${contextText}`;
-            }
-
-            async function callGemini(apiKey, question, contexts) {
-                const body = {
-                    contents: [{
-                        role: 'user',
-                        parts: [{ text: buildPrompt(question, contexts) }]
-                    }],
-                    generationConfig: {
-                        temperature: 0.2,
-                        topP: 0.8,
-                        maxOutputTokens: 2048
-                    }
-                };
-
-                const res = await fetch(GEMINI_ENDPOINT(apiKey), {
+            async function callGemini(question, contexts) {
+                const res = await fetch(CHAT_API_ENDPOINT, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(body)
+                    body: JSON.stringify({ question, contexts })
                 });
-                const data = await res.json();
-                console.log("Gemini response:", data); 
+                const data = await res.json().catch(() => ({}));
 
                 if (!res.ok) {
-                    const msg = data?.error?.message || 'Không gọi được Gemini API.';
+                    const msg = data?.error || 'Không gọi được chat API.';
                     throw new Error(msg);
                 }
-                return data?.candidates?.[0]?.content?.parts?.map(p => p.text).join('\n').trim()
+                return data?.answer?.trim()
                     || 'Gemini chưa trả về nội dung. Bạn thử hỏi lại ngắn hơn nha.';
             }
 
@@ -1628,14 +1585,6 @@ ${trimText(extra.text.replace(/\[Trang\s*\d+\]/gi, ''), 360)}`;
                 return answer;
             }
 
-            function getSavedApiKey() {
-                return GEMINI_API_KEY_DAN_VAO_DAY.trim() || localStorage.getItem('gemini_api_key_mln122') || '';
-            }
-
-            function setSavedApiKey(key) {
-                localStorage.setItem('gemini_api_key_mln122', key);
-            }
-
             function appendChatMessage(text, role) {
                 const bubble = document.createElement('div');
                 bubble.className = role === 'user'
@@ -1651,19 +1600,6 @@ ${trimText(extra.text.replace(/\[Trang\s*\d+\]/gi, ''), 360)}`;
                 const question = chatInput.value.trim();
                 if (!question) return;
 
-                if (/^(key|api key|apikey)\s*:/i.test(question)) {
-                    const key = question.split(':').slice(1).join(':').trim();
-                    if (key.length < 20) {
-                        appendChatMessage('API key có vẻ chưa đúng. Bạn kiểm tra lại key Gemini nha.', 'bot');
-                        return;
-                    }
-                    setSavedApiKey(key);
-                    chatInput.value = '';
-                    appendChatMessage('Đã lưu Gemini API key rồi. Giờ bạn hỏi nội dung trong tài liệu được rồi nha.', 'bot');
-                    chatInput.placeholder = 'Hỏi nội dung trong tài liệu...';
-                    return;
-                }
-
                 appendChatMessage(question, 'user');
                 chatInput.value = '';
                 chatSend.disabled = true;
@@ -1672,11 +1608,11 @@ ${trimText(extra.text.replace(/\[Trang\s*\d+\]/gi, ''), 360)}`;
                 try {
                     await loadChatKnowledge();
                     const contexts = retrieveContext(question, 3);
-                    const apiKey = getSavedApiKey();
                     let answer;
-                    if (apiKey) {
-                        answer = await callGemini(apiKey, question, contexts);
-                    } else {
+                    try {
+                        answer = await callGemini(question, contexts);
+                    } catch (apiErr) {
+                        console.warn(apiErr);
                         answer = fallbackReply(question, contexts);
                     }
                     pending.remove();
@@ -1693,7 +1629,6 @@ ${trimText(extra.text.replace(/\[Trang\s*\d+\]/gi, ''), 360)}`;
             }
 
             loadChatKnowledge();
-            if (getSavedApiKey()) chatInput.placeholder = 'Hỏi nội dung trong tài liệu...';
 
             if (chatSend && chatInput && chatMessages) {
                 chatSend.addEventListener('click', sendChatMessage);
