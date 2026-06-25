@@ -886,18 +886,17 @@
             <div class="bg-surface-container-high p-4 border-b border-outline/20 flex justify-between items-center">
                 <div class="flex items-center gap-2"><span
                         class="material-symbols-outlined text-marx-red">smart_toy</span><span
-                        class="font-label-caps text-sm">Marxist Assistant</span></div><button
+                        class="font-label-caps text-sm">Trợ lí Kinh Tế Chính Trị</span></div><button
                     class="material-symbols-outlined text-outline hover:text-white"
                     onclick="document.getElementById('ai-chat-window').classList.add('hidden')">close</button>
             </div>
             <div class="flex-1 overflow-y-auto p-4 space-y-4 bg-surface/40" id="ai-chat-messages">
-                <div class="bg-marx-red/10 border border-marx-red/20 p-3 rounded-xl rounded-tl-none text-sm">Xin chào!
-                    Tôi có thể giúp bạn tra cứu nội dung trong báo cáo.</div>
+                <div class="bg-marx-red/10 border border-marx-red/20 p-3 rounded-xl rounded-tl-none text-sm">Xin chào! Mình là trợ lý học tập môn Kinh tế chính trị Mác - Lênin. Bạn hỏi khái niệm hoặc bài tập tư duy, mình sẽ giải thích ngắn gọn, dễ hiểu nha.</div>
             </div>
             <div class="p-4 bg-surface-container">
                 <div class="relative"><input
                         class="w-full bg-surface-dim border border-outline/30 rounded-full py-2 pl-4 pr-10 text-sm focus:border-marx-red outline-none"
-                        id="ai-chat-input" placeholder="Hỏi theo nội dung báo cáo..." type="text" /><button
+                        id="ai-chat-input" placeholder="Hỏi nội dung trong tài liệu..." type="text" /><button
                         type="button" id="ai-chat-send"
                         class="absolute right-2 top-1/2 -translate-y-1/2 material-symbols-outlined text-marx-red hover:text-white cursor-pointer"
                         aria-label="Gửi">send</button></div>
@@ -1471,182 +1470,170 @@
     <script>
         // --- Simulator Logic ---
         document.addEventListener('DOMContentLoaded', () => {
-            // --- Marxist Assistant Chat (report knowledge base) ---
+            // --- Gemini PDF Assistant (RAG over 2 PDF knowledge base) ---
             const chatMessages = document.getElementById('ai-chat-messages');
             const chatInput = document.getElementById('ai-chat-input');
             const chatSend = document.getElementById('ai-chat-send');
             let pdfChunks = [];
             let knowledgeReady = false;
-            const reportKnowledge = [
-                {
-                    id: 'report-01',
-                    source: 'Báo cáo lý luận giá trị thặng dư Mác',
-                    keywords: ['mở đầu', 'lao động cụ thể', 'lao động trừu tượng', 'trao đổi ngang giá'],
-                    text: 'Việc C. Mác phát hiện ra tính hai mặt của lao động sản xuất hàng hóa, gồm lao động cụ thể và lao động trừu tượng, là tiền đề để xây dựng học thuyết giá trị thặng dư. Câu hỏi trọng tâm là: tại sao hàng hóa được trao đổi ngang giá mà nhà tư bản vẫn thu được lợi nhuận ngày càng lớn?'
-                },
-                {
-                    id: 'report-02',
-                    source: 'Báo cáo lý luận giá trị thặng dư Mác',
-                    keywords: ['T-H-T', 'công thức chung', 'lưu thông', 'tư bản'],
-                    text: "Tiền trong nền sản xuất tư bản vận động theo công thức T - H - T', nhằm thu về số tiền lớn hơn số tiền ứng ra ban đầu, tức T' > T. Tuy nhiên, bản thân quá trình lưu thông mua bán thuần túy không tạo ra giá trị mới."
-                },
-                {
-                    id: 'report-03',
-                    source: 'Báo cáo lý luận giá trị thặng dư Mác',
-                    keywords: ['hàng hóa sức lao động', 'tự do thân thể', 'tư liệu sản xuất', 'làm thuê'],
-                    text: 'Chìa khóa giải mã là hàng hóa sức lao động. Sức lao động trở thành hàng hóa khi người lao động được tự do về thân thể nhưng không có tư liệu sản xuất, nên buộc phải đi làm thuê.'
-                },
-                {
-                    id: 'report-04',
-                    source: 'Báo cáo lý luận giá trị thặng dư Mác',
-                    keywords: ['nguồn gốc', 'giá trị thặng dư', 'm', 'chiếm đoạt'],
-                    text: 'Trong quá trình sản xuất, sức lao động không chỉ bảo tồn giá trị cũ mà còn tạo ra một lượng giá trị mới lớn hơn giá trị của bản thân nó. Giá trị thặng dư, ký hiệu là m, là bộ phận giá trị mới dôi ra ngoài giá trị sức lao động do công nhân tạo ra nhưng bị nhà tư bản chiếm đoạt không công.'
-                },
-                {
-                    id: 'report-05',
-                    source: 'Báo cáo lý luận giá trị thặng dư Mác',
-                    keywords: ['tư bản bất biến', 'c', 'máy móc', 'nguyên vật liệu'],
-                    text: 'Tư bản bất biến, ký hiệu là c, gồm máy móc và nguyên vật liệu. Giá trị của chúng chỉ được chuyển nguyên vẹn vào sản phẩm và hoàn toàn không sinh ra giá trị thặng dư.'
-                },
-                {
-                    id: 'report-06',
-                    source: 'Báo cáo lý luận giá trị thặng dư Mác',
-                    keywords: ['tư bản khả biến', 'v', 'sức lao động', 'bóc lột'],
-                    text: 'Tư bản khả biến, ký hiệu là v, là tiền dùng để mua sức lao động. Đây là nguồn gốc duy nhất sinh ra giá trị thặng dư thông qua lao động trừu tượng của công nhân. Về bản chất, giá trị thặng dư phản ánh quan hệ giai cấp bóc lột giữa người nắm giữ tư liệu sản xuất và người lao động làm thuê.'
-                },
-                {
-                    id: 'report-07',
-                    source: 'Báo cáo lý luận giá trị thặng dư Mác',
-                    keywords: ['tỷ suất giá trị thặng dư', "m'", 'trình độ bóc lột', 'khối lượng', 'M'],
-                    text: "Tỷ suất giá trị thặng dư được tính bằng m' = (m / v) × 100%, phản ánh trình độ và mức độ bóc lột sức lao động. Khối lượng giá trị thặng dư được tính bằng M = m' × V, trong đó V là tổng tư bản khả biến; chỉ tiêu này phản ánh quy mô làm giàu của nhà tư bản."
-                },
-                {
-                    id: 'report-08',
-                    source: 'Báo cáo lý luận giá trị thặng dư Mác',
-                    keywords: ['giá trị thặng dư tuyệt đối', 'tuyệt đối', 'kéo dài', 'cường độ lao động'],
-                    text: 'Giá trị thặng dư tuyệt đối được tạo ra bằng cách kéo dài thời gian làm việc trong ngày hoặc tăng cường độ lao động, trong khi tiền lương không đổi.'
-                },
-                {
-                    id: 'report-09',
-                    source: 'Báo cáo lý luận giá trị thặng dư Mác',
-                    keywords: ['giá trị thặng dư tương đối', 'tương đối', 'năng suất lao động', 'lao động tất yếu'],
-                    text: 'Giá trị thặng dư tương đối được tạo ra bằng cách tăng năng suất lao động xã hội để rút ngắn thời gian lao động tất yếu, từ đó kéo dài thời gian làm việc không công trong điều kiện độ dài ngày lao động không đổi.'
-                },
-                {
-                    id: 'report-10',
-                    source: 'Báo cáo lý luận giá trị thặng dư Mác',
-                    keywords: ['giá trị thặng dư siêu ngạch', 'siêu ngạch', 'công nghệ', 'cải tiến kỹ thuật'],
-                    text: 'Giá trị thặng dư siêu ngạch xuất hiện khi một doanh nghiệp cá biệt đổi mới công nghệ vượt trội. Đây là động lực mạnh nhất thúc đẩy các nhà tư bản không ngừng cải tiến kỹ thuật và là nội dung cần lưu ý khi phân tích phương pháp sản xuất giá trị thặng dư tương đối.'
-                },
-                {
-                    id: 'report-11',
-                    source: 'Báo cáo lý luận giá trị thặng dư Mác',
-                    keywords: ['lợi nhuận', 'lợi tức', 'địa tô', 'che đậy'],
-                    text: 'Trên bề mặt thị trường, giá trị thặng dư bị che đậy dưới những hình thức khác. Lợi nhuận làm người ta lầm tưởng tiền lời sinh ra từ toàn bộ vốn đầu tư; lợi tức và địa tô là những phần giá trị thặng dư mà nhà tư bản công nghiệp chia lại cho tư bản cho vay và địa chủ.'
-                },
-                {
-                    id: 'report-12',
-                    source: 'Báo cáo lý luận giá trị thặng dư Mác',
-                    keywords: ['cách mạng 4.0', 'AI', 'robot', 'lao động trí tuệ', 'lao động quản lý'],
-                    text: 'Trong bối cảnh Cách mạng 4.0, công nghệ, AI và robot vẫn là tư bản bất biến. Cốt lõi của việc tạo ra giá trị mới vẫn là sức lao động con người, đặc biệt là lao động trí tuệ và lao động quản lý phức tạp.'
-                },
-                {
-                    id: 'report-13',
-                    source: 'Báo cáo lý luận giá trị thặng dư Mác',
-                    keywords: ['Việt Nam', 'kinh tế tư nhân', 'nhà nước điều tiết', 'thuế lũy tiến', 'an sinh'],
-                    text: 'Vận dụng tại Việt Nam cần thừa nhận kinh tế tư nhân và sự tồn tại khách quan của các quan hệ lợi ích để tạo động lực phát triển. Nhà nước phải điều tiết bằng pháp luật, chính sách an sinh và thuế lũy tiến nhằm bảo vệ quyền lợi người lao động, chống bóc lột cạn kiệt.'
-                },
-                {
-                    id: 'report-14',
-                    source: 'Báo cáo lý luận giá trị thặng dư Mác',
-                    keywords: ['phân phối', 'công bằng xã hội', 'kết luận', 'định hướng XHCN'],
-                    text: 'Việt Nam cần thực hiện phân phối hài hòa, bảo đảm tiến bộ và công bằng xã hội theo định hướng dân giàu, nước mạnh, dân chủ, công bằng, văn minh. Học thuyết giá trị thặng dư của C. Mác vẫn là chìa khóa để hiểu bản chất của nền kinh tế thị trường và cung cấp phương pháp luận cho quá trình phát triển kinh tế thị trường định hướng XHCN.'
-                }
-            ];
+
+            const GEMINI_MODEL = 'gemini-2.0-flash';
+            //APIkey
+            const GEMINI_API_KEY_DAN_VAO_DAY = 'AQ.Ab8RN6JRQ_CUNSCniDQ94fFk_jpOM4voAa4HeuD5n6Ld62A7qQAQ.Ab8RN6K3E0DDUBrQXRsAoBOAG4uclyFlbnQH5F9vPP7Y7TNIdQ';
+
+            const GEMINI_ENDPOINT = (apiKey) =>
+                `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(apiKey)}`;
 
             function normalizeText(text) {
-                return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                return (text || '').toLowerCase()
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .replace(/đ/g, 'd');
             }
 
             function tokenize(text) {
+                const stop = new Set(['la', 'va', 'cua', 'cac', 'mot', 'cho', 'trong', 'voi', 'duoc', 'theo', 'nay', 'do', 'thi', 'khi', 'nhung', 'nguoi', 'kinh', 'te', 'chinh', 'tri', 'mac', 'lenin']);
                 return normalizeText(text)
                     .split(/[^a-z0-9]+/)
-                    .filter(t => t.length >= 2 && !['la', 'va', 'cua', 'cac', 'mot', 'cho', 'trong', 'voi', 'duoc', 'theo', 'nay', 'do'].includes(t));
+                    .filter(t => t.length >= 2 && !stop.has(t));
             }
 
             async function loadChatKnowledge() {
-                pdfChunks = reportKnowledge;
-                knowledgeReady = true;
+                if (knowledgeReady) return;
+                try {
+                    const res = await fetch('data/chat-knowledge.json');
+                    if (!res.ok) throw new Error('Không tải được data/chat-knowledge.json');
+                    const data = await res.json();
+                    pdfChunks = data.chunks || [];
+                    knowledgeReady = true;
+                } catch (err) {
+                    console.error(err);
+                    pdfChunks = [];
+                    knowledgeReady = true;
+                }
             }
 
             function scoreChunk(chunk, queryTokens, queryNorm) {
                 const textNorm = normalizeText(chunk.text);
+                const sourceNorm = normalizeText(chunk.source);
                 let score = 0;
 
                 for (const token of queryTokens) {
-                    if (textNorm.includes(token)) score += 4;
-                    if (chunk.keywords.some(kw => normalizeText(kw).includes(token))) score += 2;
+                    if (textNorm.includes(token)) score += 3;
+                    if ((chunk.keywords || []).some(kw => normalizeText(kw).includes(token))) score += 5;
+                    if (sourceNorm.includes(token)) score += 1;
                 }
 
                 for (let i = 0; i < queryTokens.length - 1; i++) {
                     const bigram = `${queryTokens[i]} ${queryTokens[i + 1]}`;
-                    if (textNorm.includes(bigram)) score += 7;
+                    if (textNorm.includes(bigram)) score += 10;
                 }
 
-                if (queryNorm.length > 8 && textNorm.includes(queryNorm)) score += 14;
-
-                if (/t\s*[-–]\s*h\s*[-–]\s*t/i.test(queryNorm.replace(/\s/g, '')) || queryNorm.includes('t h t')) {
-                    if (textNorm.includes('t - h - t') || textNorm.includes('t-h-t')) score += 16;
-                }
-
-                if (queryNorm.includes('thang du') || queryNorm.includes('gia tri')) score += 3;
+                if (queryNorm.includes('gia tri thang du')) score += textNorm.includes('gia tri thang du') ? 18 : 0;
+                if (queryNorm.includes('hang hoa suc lao dong')) score += textNorm.includes('hang hoa suc lao dong') ? 18 : 0;
+                if (queryNorm.includes('san xuat hang hoa')) score += textNorm.includes('san xuat hang hoa') ? 16 : 0;
+                if (queryNorm.includes('thi truong')) score += textNorm.includes('thi truong') ? 10 : 0;
 
                 return score;
             }
 
-            function trimAnswer(text, maxLen = 750) {
-                if (text.length <= maxLen) return text;
-                const cut = text.slice(0, maxLen);
+            function retrieveContext(question, limit = 3) {
+                const queryTokens = tokenize(question);
+                const queryNorm = queryTokens.join(' ');
+                if (!queryTokens.length) return [];
+
+                return pdfChunks
+                    .map(chunk => ({ chunk, score: scoreChunk(chunk, queryTokens, queryNorm) }))
+                    .filter(item => item.score > 0)
+                    .sort((a, b) => b.score - a.score)
+                    .slice(0, limit)
+                    .map(item => item.chunk);
+            }
+
+            function trimText(text, maxLen = 950) {
+                const t = (text || '').replace(/\s+/g, ' ').trim();
+                if (t.length <= maxLen) return t;
+                const cut = t.slice(0, maxLen);
                 const lastStop = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf('; '));
                 return (lastStop > maxLen * 0.55 ? cut.slice(0, lastStop + 1) : cut.trim()) + '...';
             }
 
-            function formatSource(source) {
-                return 'Báo cáo lý luận giá trị thặng dư Mác';
+            function buildPrompt(question, contexts) {
+                const contextText = contexts.map((c, i) =>
+                    `[Đoạn tham khảo ${i + 1}]
+${trimText(c.text.replace(/\[Trang\s*\d+\]/gi, ''), 1100)}`
+                ).join('\n\n');
+
+                return `Mình là trợ lý học tập môn Kinh tế chính trị Mác - Lênin cho sinh viên.
+
+CÁCH TRẢ LỜI:
+- Trả lời tự nhiên như trợ giảng, thân thiện và dễ hiểu.
+- Không nhắc tên file PDF, không nhắc trang, không nói “theo tài liệu”, “trong dữ liệu”, “nguồn”.
+- Không trích nguyên văn dài; hãy tự diễn giải lại ý chính.
+- Nếu hỏi khái niệm: nêu khái niệm ngắn + giải thích + ví dụ đơn giản.
+- Nếu hỏi so sánh: trình bày gọn bằng các ý hoặc bảng.
+- Nếu hỏi câu tư duy/vận dụng: phân tích logic từng bước rồi chốt kết luận.
+- Nếu dữ liệu chưa đủ rõ, hãy nói nhẹ nhàng rằng mình chưa thấy đủ căn cứ trong tài liệu hiện có.
+- Câu trả lời nên vừa đủ, không quá dài, ưu tiên 3-6 ý chính.
+
+CÂU HỎI CỦA NGƯỜI DÙNG:
+${question}
+
+NỘI DUNG THAM KHẢO NỘI BỘ:
+${contextText}`;
             }
 
-            function getChatReply(question) {
-                if (!knowledgeReady) {
-                    return 'Đang tải nội dung báo cáo. Vui lòng thử lại sau vài giây.';
-                }
-
-                const queryTokens = tokenize(question);
-                const queryNorm = queryTokens.join(' ');
-                if (!queryTokens.length) {
-                    return 'Vui lòng nhập câu hỏi về giá trị thặng dư, tư bản, lao động, phương pháp luận Mác - Lênin...';
-                }
-
-                const ranked = pdfChunks
-                    .map(chunk => ({ chunk, score: scoreChunk(chunk, queryTokens, queryNorm) }))
-                    .filter(item => item.score > 0)
-                    .sort((a, b) => b.score - a.score);
-
-                if (!ranked.length) {
-                    return 'Không tìm thấy đoạn phù hợp trong báo cáo. Thử hỏi cụ thể hơn, ví dụ: "giá trị thặng dư tương đối", "tư bản khả biến", "T-H-T\'", "vận dụng tại Việt Nam".';
-                }
-
-                const best = ranked[0].chunk;
-                let answer = trimAnswer(best.text.replace(/\s+/g, ' ').trim());
-                answer += `\n\n— Nguồn: ${formatSource(best.source)}`;
-
-                if (ranked.length > 1 && ranked[1].score >= ranked[0].score * 0.75) {
-                    const second = ranked[1].chunk;
-                    if (second.id !== best.id) {
-                        answer += `\n\n— Bổ sung (${formatSource(second.source)}): ${trimAnswer(second.text.replace(/\s+/g, ' ').trim(), 320)}`;
+            async function callGemini(apiKey, question, contexts) {
+                const body = {
+                    contents: [{
+                        role: 'user',
+                        parts: [{ text: buildPrompt(question, contexts) }]
+                    }],
+                    generationConfig: {
+                        temperature: 0.2,
+                        topP: 0.8,
+                        maxOutputTokens: 2048
                     }
-                }
+                };
 
+                const res = await fetch(GEMINI_ENDPOINT(apiKey), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                const data = await res.json();
+                console.log("Gemini response:", data); 
+
+                if (!res.ok) {
+                    const msg = data?.error?.message || 'Không gọi được Gemini API.';
+                    throw new Error(msg);
+                }
+                return data?.candidates?.[0]?.content?.parts?.map(p => p.text).join('\n').trim()
+                    || 'Gemini chưa trả về nội dung. Bạn thử hỏi lại ngắn hơn nha.';
+            }
+
+            function fallbackReply(question, contexts) {
+                if (!contexts.length) {
+                    return 'Mình chưa hiểu câu hỏi, bạn thử hỏi rõ hơn một chút nha, ví dụ: “giá trị thặng dư là gì”, “hàng hóa sức lao động là gì”, “vì sao lưu thông không tạo ra giá trị thặng dư?”.';
+                }
+                const main = contexts[0];
+                const extra = contexts[1];
+                let answer = `Đoạn này có thể giúp trả lời câu hỏi của bạn:
+
+${trimText(main.text.replace(/\[Trang\s*\d+\]/gi, ''), 780)}`;
+                if (extra && extra.source !== main.source) answer += `
+
+Ý bổ sung:
+${trimText(extra.text.replace(/\[Trang\s*\d+\]/gi, ''), 360)}`;
                 return answer;
+            }
+
+            function getSavedApiKey() {
+                return GEMINI_API_KEY_DAN_VAO_DAY.trim() || localStorage.getItem('gemini_api_key_mln122') || '';
+            }
+
+            function setSavedApiKey(key) {
+                localStorage.setItem('gemini_api_key_mln122', key);
             }
 
             function appendChatMessage(text, role) {
@@ -1664,23 +1651,49 @@
                 const question = chatInput.value.trim();
                 if (!question) return;
 
+                if (/^(key|api key|apikey)\s*:/i.test(question)) {
+                    const key = question.split(':').slice(1).join(':').trim();
+                    if (key.length < 20) {
+                        appendChatMessage('API key có vẻ chưa đúng. Bạn kiểm tra lại key Gemini nha.', 'bot');
+                        return;
+                    }
+                    setSavedApiKey(key);
+                    chatInput.value = '';
+                    appendChatMessage('Đã lưu Gemini API key rồi. Giờ bạn hỏi nội dung trong tài liệu được rồi nha.', 'bot');
+                    chatInput.placeholder = 'Hỏi nội dung trong tài liệu...';
+                    return;
+                }
+
                 appendChatMessage(question, 'user');
                 chatInput.value = '';
                 chatSend.disabled = true;
+                const pending = appendChatMessage('Đang suy nghĩ', 'bot');
 
-                const pending = appendChatMessage('Đang tra cứu trong tài liệu...', 'bot');
-
-                if (!knowledgeReady) await loadChatKnowledge();
-
-                window.setTimeout(() => {
+                try {
+                    await loadChatKnowledge();
+                    const contexts = retrieveContext(question, 3);
+                    const apiKey = getSavedApiKey();
+                    let answer;
+                    if (apiKey) {
+                        answer = await callGemini(apiKey, question, contexts);
+                    } else {
+                        answer = fallbackReply(question, contexts);
+                    }
                     pending.remove();
-                    appendChatMessage(getChatReply(question), 'bot');
+                    appendChatMessage(answer, 'bot');
+                } catch (err) {
+                    pending.remove();
+                    console.error(err);
+
+                    appendChatMessage(`Mình chưa xử lý được câu hỏi này. Bạn thử hỏi lại ngắn gọn hoặc rõ ý hơn một chút nha.`, 'bot');
+                } finally {
                     chatSend.disabled = false;
                     chatInput.focus();
-                }, 280);
+                }
             }
 
             loadChatKnowledge();
+            if (getSavedApiKey()) chatInput.placeholder = 'Hỏi nội dung trong tài liệu...';
 
             if (chatSend && chatInput && chatMessages) {
                 chatSend.addEventListener('click', sendChatMessage);
